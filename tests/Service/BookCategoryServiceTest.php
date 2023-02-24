@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Service;
+namespace App\tests\Service;
 
 use App\Entity\BookCategory;
 use App\Models\BookCategoryListItem;

@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 
-
 use App\Service\BookCategoryService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,8 +17,8 @@ class BookCategoryController extends AbstractController
     #[Route('/book/category', name: 'app_book_category')]
     public function index(): JsonResponse
     {
-        return $this->json([
+        return $this->json(
             $this->bookCategoryService->getCategories()
-        ]);
+        );
     }
 }
