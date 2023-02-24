@@ -1,0 +1,2 @@
+1. Установка пакет для юнит теста. composer require -w --dev phpunit/phpunit:^9.5 symfony/test-pack
+2. Навести на Наш сервис в данном случае BookCategoryService нажать правой кнопкой мыши -> showcontextActions -> makeUnitTests
