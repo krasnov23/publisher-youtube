@@ -1,0 +1,15 @@
+{
+  "items": [
+    {
+      "id": 7,
+      "title": "RXJava for Android Developer",
+      "slug": "rxjava-for-android-developers",
+      "image": "rx-java-hi.png",
+      "authors": [
+        "P.Novikov"
+      ],
+      "meap": false,
+      "publicationData": 1554076800
+    }
+  ]
+}
