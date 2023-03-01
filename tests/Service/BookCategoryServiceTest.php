@@ -7,21 +7,27 @@ use App\Models\BookCategoryListItem;
 use App\Models\BookCategoryListResponse;
 use App\Repository\BookCategoryRepository;
 use App\Service\BookCategoryService;
+use App\Tests\AbstractTestCase;
 use Doctrine\Common\Collections\Criteria;
 use PHPUnit\Framework\TestCase;
 
-class BookCategoryServiceTest extends TestCase
+class BookCategoryServiceTest extends AbstractTestCase
 {
 
     public function testGetCategories(): void
     {
+        $category = (new BookCategory())->setTitle('Test')->setSlug('test');
+
+        $this->setEntityId($category,7,);
+
+
         // Создал макет репозитория (пустышку)
         $repository = $this->createMock(BookCategoryRepository::class);
 
         // Настраиваем метод и ожидаем что он будет вызван один раз, сам метод будет findBy
         // и репозиторий будет упорядочен по алфавиту и вернет массив в котором будет экземпляр класса BookCategory
-        $repository->expects($this->once())->method('findBy')->with([],['title' => Criteria::ASC])
-            ->willReturn([(new BookCategory())->setId(7)->setTitle('Test')->setSlug('test')]);
+        $repository->expects($this->once())->method('findAllSortedByAlphabet')
+            ->willReturn([$category]);
 
 
         $service = new BookCategoryService($repository);

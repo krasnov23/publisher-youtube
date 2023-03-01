@@ -20,7 +20,7 @@ class BookCategoryService
     {
         // Ищет все книги, сортирует по названию категорий книги в алфавитном порядке, пустой список означает что у нас нет критерия
         // то есть не ищем категорию с конкретным названием
-        $categories = $this->bookCategoryRepository->findBy([],['title'=> Criteria::ASC]);
+        $categories = $this->bookCategoryRepository->findAllSortedByAlphabet();
 
 
         $items = array_map(
