@@ -22,10 +22,8 @@ class DefaultController extends AbstractController
         $book = new Book();
         $book->setTitle('Pavel');
 
-        $books->save($book,true);
+        $books->save($book, true);
 
         return new Response();
     }
-
-
 }

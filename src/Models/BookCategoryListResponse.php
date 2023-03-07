@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\BookCategoryListItem;
-
 class BookCategoryListResponse
 {
     /**
-     * @var BookCategoryListItem[] $items
+     * @var BookCategoryListItem[]
      */
-    private array $items ;
+    private array $items;
 
     /**
      * @param BookCategoryListItem[] $items
@@ -34,6 +32,4 @@ class BookCategoryListResponse
     {
         $this->items = $items;
     }
-
-
 }

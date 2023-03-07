@@ -18,10 +18,9 @@ class BookCategoryFixtures extends Fixture
     {
         $categories = [
             self::DEVICES_CATEGORY => (new BookCategory())->setTitle('Devices')->setSlug('devices'),
-            self::ANDROID_CATEGORY => ((new BookCategory())->setTitle('Android')->setSlug('android'))];
+            self::ANDROID_CATEGORY => (new BookCategory())->setTitle('Android')->setSlug('android')];
 
-        foreach ($categories as $category)
-        {
+        foreach ($categories as $category) {
             $manager->persist($category);
         }
 
@@ -31,9 +30,8 @@ class BookCategoryFixtures extends Fixture
 
         // Референсы нужны нам для того чтобы ссылаться на категории из сущности книг
         // Создается ссылка на объект (который будет создан к моменту создания нашей сущности книги) через константы
-        foreach ($categories as $code => $category)
-        {
-            $this->addReference($code,$category);
+        foreach ($categories as $code => $category) {
+            $this->addReference($code, $category);
         }
     }
 }

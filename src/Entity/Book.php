@@ -4,8 +4,8 @@ namespace App\Entity;
 
 use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
@@ -24,13 +24,13 @@ class Book
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
-    #[ORM\Column(type: "simple_array")]
+    #[ORM\Column(type: 'simple_array')]
     private array $authors = [];
 
-    #[ORM\Column(type: "date")]
+    #[ORM\Column(type: 'date')]
     private \DateTimeInterface $publicationData;
 
-    #[ORM\Column(type: "boolean",options: ['default' => false])]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $meap = false;
 
     /**
@@ -42,9 +42,7 @@ class Book
     public function __construct()
     {
         $this->categories = new ArrayCollection();
-
     }
-
 
     public function getId(): ?int
     {
@@ -140,5 +138,4 @@ class Book
 
         return $this;
     }
-
 }

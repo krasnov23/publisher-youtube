@@ -1,0 +1,11 @@
+5 ролик на ютубе (30ая минута)
+
+1. Вносим еще один образ в docker-compose.yml ( запускаем), изменяем порты в появившемся .env.test
+2. Создаем абстракт класс для тестирования репозиториев (AbstractRepositoryTest), с методами сетап и тирдаун
+3. Создали BookRepositoryTest который наследует абстрактный класс AbstractRepositoryTest
+4. Устанавливаем следующий пакет composer require --dev dama/doctrine-test-bundle (-y)
+( пакет позволяет производить обновления в базе данных внутри миграции но после теста он ее откатывает, это
+позволяет нам не засирать базу данных. (https://github.com/dmaicher/doctrine-test-bundle)
+- добавляем строчки в phpunit.xml.dist указанные в строчке выше.
+5. php bin/console doctrine:migrations:migrate --env=test - c помощью миграции создает тестовую базу
+6.

@@ -46,6 +46,4 @@ class BookCategory
 
         return $this;
     }
-
-
 }

@@ -45,6 +45,6 @@ class BookCategoryRepository extends ServiceEntityRepository
      */
     public function findAllSortedByAlphabet(): array
     {
-        return $this->findBy([],['title'=> Criteria::ASC]);
+        return $this->findBy([], ['title' => Criteria::ASC]);
     }
 }

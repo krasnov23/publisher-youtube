@@ -8,18 +8,14 @@ use App\Models\BookCategoryListResponse;
 use App\Repository\BookCategoryRepository;
 use App\Service\BookCategoryService;
 use App\Tests\AbstractTestCase;
-use Doctrine\Common\Collections\Criteria;
-use PHPUnit\Framework\TestCase;
 
 class BookCategoryServiceTest extends AbstractTestCase
 {
-
     public function testGetCategories(): void
     {
         $category = (new BookCategory())->setTitle('Test')->setSlug('test');
 
-        $this->setEntityId($category,7,);
-
+        $this->setEntityId($category, 7);
 
         // Создал макет репозитория (пустышку)
         $repository = $this->createMock(BookCategoryRepository::class);
@@ -29,13 +25,10 @@ class BookCategoryServiceTest extends AbstractTestCase
         $repository->expects($this->once())->method('findAllSortedByAlphabet')
             ->willReturn([$category]);
 
-
         $service = new BookCategoryService($repository);
 
-        $expected = new BookCategoryListResponse([new BookCategoryListItem(7,'Test','test')]);
+        $expected = new BookCategoryListResponse([new BookCategoryListItem(7, 'Test', 'test')]);
 
-        $this->assertEquals($expected,$service->getCategories());
-
-
+        $this->assertEquals($expected, $service->getCategories());
     }
 }

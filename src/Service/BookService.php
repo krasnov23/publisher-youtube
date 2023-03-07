@@ -19,17 +19,15 @@ class BookService
     {
         $category = $this->bookCategoryRepository->find($categoryId);
 
-        if ($category === null)
-        {
+        if (null === $category) {
             throw new BookCategoryNotFoundException();
         }
 
         // Берет наш объект бук из тех книг который подходят под определенную категорию
         // и переписывает их в массив из объектов класса BookListItem
-        $mapping = array_map([$this,'map'],$this->bookRepository->findBooksByCategoryId($categoryId));
+        $mapping = array_map([$this, 'map'], $this->bookRepository->findBooksByCategoryId($categoryId));
 
         return new BookListResponse($mapping);
-
     }
 
     private function map(Book $book): BookListItem
@@ -43,9 +41,6 @@ class BookService
             ->setMeap($book->isMeap())
             ->setPublicationData($book->getPublicationData()->getTimestamp()
             )
-            ;
-
-
+        ;
     }
-
 }
