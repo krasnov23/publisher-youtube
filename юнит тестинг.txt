@@ -1,4 +1,4 @@
-1. Установка пакет для юнит теста. composer require -w --dev phpunit/phpunit:^9.5 symfony/test-pack (или просто симфони тестпак)
+1. Установка пакет для юнит теста. composer require -w --dev symfony/test-pack (или просто симфони тестпак)
 2. Навести на Наш сервис в данном случае BookCategoryService нажать правой кнопкой мыши -> showcontextActions -> makeUnitTests
 
 Мы пишем два вида тестов первый это юнит тесты, то есть какая-то отдельная его часть. сейчас мы хотим проверить работу

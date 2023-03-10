@@ -27,6 +27,7 @@ class BookService
         // и переписывает их в массив из объектов класса BookListItem
         $mapping = array_map([$this, 'map'], $this->bookRepository->findBooksByCategoryId($categoryId));
 
+
         return new BookListResponse($mapping);
     }
 

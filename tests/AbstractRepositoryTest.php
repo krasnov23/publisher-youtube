@@ -15,6 +15,7 @@ abstract class AbstractRepositoryTest extends KernelTestCase
     {
         parent::setUp();
 
+        // подгатавливает к созданию сущности
         $this->em = self::getContainer()->get('doctrine.orm.entity_manager');
 
     }
@@ -31,6 +32,7 @@ abstract class AbstractRepositoryTest extends KernelTestCase
     {
         parent::tearDown();
 
+        // Можно сказать что удаляет сущность из тестовой базы после проведения тестов
         $this->em->close();
     }
 
