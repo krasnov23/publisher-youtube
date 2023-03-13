@@ -24,9 +24,10 @@ class BookServiceTest extends AbstractTestCase
         // Тест на то что при методе фаинд с айди 130 не будет найдена данная категория книг
         // Ожидает что при выбросе айди = 130, mock выбросит исключение
         $bookCategoryRepository->expects($this->once())
-            ->method('find')
+            ->method('existsById')
             ->with(130)
-            ->willThrowException(new BookCategoryNotFoundException());
+            ->willReturn(false);
+            //->willThrowException(new BookCategoryNotFoundException());
 
         $this->expectException(BookCategoryNotFoundException::class);
 
@@ -52,10 +53,10 @@ class BookServiceTest extends AbstractTestCase
 
         $bookCategoryRepository->expects($this->once())
             // Ищет категорию с айди 130
-            ->method('find')
+            ->method('existsById')
             ->with(130)
             // Возвращает BookCategory - в данном случае пустой так как нам не важно что-то кроме айди конкретной категории
-            ->willReturn(new BookCategory());
+            ->willReturn(true);
 
         // Отправляет наши значения в BookService и должен дать нам на выходе то что будет указанно в expected
         $service = new BookService($bookRepository, $bookCategoryRepository);

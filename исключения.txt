@@ -1,0 +1,13 @@
+1. Заходим в services.yaml, в строке parameters на след строчке с табуляцией создаем колонку
+exceptions (далее инструкция в services.yaml)
+2. Создаем папку ExceptionHandler, класс ExceptionMapping - этот модель, которая будет содержать свойства указанные
+в services.yaml.
+3. Создание ExceptionMappingResolver который будет выкидывать исключение ориентируясь на services.yaml
+4. Пробрасываем параметры наших исключений в services.yaml со строки App\Service\ExceptionHandler\ExceptionMappingResolver:
+5. Создали класс ApiExceptionListener который будет возвращать нам конечный ответ.
+6.
+7. Добавили слагер в контроллер об ошибке
+
+
+В целом:
+Мы добавили наши классы с ошибками и параметры в services.yaml дальше они перетекают в переменную exceptions в

@@ -8,6 +8,6 @@ class BookCategoryNotFoundException extends \RuntimeException
 {
     public function __construct()
     {
-        parent::__construct('Book category doesnt found', Response::HTTP_NOT_FOUND, null);
+        parent::__construct('Book category not found', );
     }
 }
