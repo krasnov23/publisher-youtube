@@ -265,7 +265,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
         $event = $this->createEvent(new InvalidArgumentException('error message'));
 
         // Добавляем тру потому что мы в дебаг режиме
-        $this->runListener($event,true);
+        $this->runListener($event);
 
         // Получает ответ
         $response = $event->getResponse();
@@ -335,7 +335,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
     // Создаем новые метод.
     private function runListener(ExceptionEvent $event,bool $isDebug = false ): void
     {
-        $listener = (new ApiExceptionListener($this->resolver,$this->logger,$this->serializer,false));
+        $listener = (new ApiExceptionListener($this->resolver,$this->logger,$this->serializer,$isDebug));
 
         // Принимает ExceptionEvent
         $listener($event);

@@ -61,7 +61,7 @@ class ApiExceptionListener
         // Если Debug true то возвращает трейс ошибки
         $details = $this->isDebug ? ['trace' => $throwable->getTraceAsString()]: null;
 
-        // Сериализирует наш ответ в Json Формат, ErrorResponse возвращает нам ответ json на нашем экране
+        // Сериализирует наш ответ в Json Формат, ErrorResponse возвращает нам ответ json на нашем экране (т.е пользователю)
         $data = $this->serializer->serialize(new ErrorResponse($message,$details), JsonEncoder::FORMAT);
 
         // Сформируем наш ответ. пустой массив это хедеры мы тут их не передаем, json = true говорит о том что данные уже в
