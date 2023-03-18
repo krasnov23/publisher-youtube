@@ -11,7 +11,7 @@ class ExceptionMappingResolver
     /**
      * @var ExceptionMapping[]
      */
-    private array $mappings;
+    private array $mappings = [];
 
     // В данном случае фактически метод констракт просто перемапливает наши исключения из сервис.yaml проверяя указан ли в них код
     public function __construct(array $mappings)
@@ -38,7 +38,7 @@ class ExceptionMappingResolver
     {
         $foundMapping = null;
 
-        // Проходит по массиву и сравневает его с нашим названием класса исключения
+        // Проходит по массиву и сравнивает его с нашим названием класса исключения
         foreach ($this->mappings as $class => $mapping)
         {
             // метод is_subclass_of, отвечает за то чтобы например нижняя строчка services.yaml, parameters/exceptions

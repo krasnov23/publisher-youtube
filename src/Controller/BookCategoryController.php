@@ -27,6 +27,7 @@ class BookCategoryController extends AbstractController
     #[Route(path: 'api/v1/book/categories', name: 'app_book_categories', methods: ['GET'])]
     public function index(): JsonResponse
     {
+        //throw new \RuntimeException('test');
         return $this->json(
             $this->bookCategoryService->getCategories()
         );

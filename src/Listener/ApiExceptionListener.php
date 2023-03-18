@@ -17,7 +17,10 @@ class ApiExceptionListener
 
     public function __construct(private ExceptionMappingResolver $resolver,
                                 private LoggerInterface $logger,
-                                private SerializerInterface $serializer)
+                                private SerializerInterface $serializer,
+                                // Переменная isDebug была определенна в services.yaml, при построении сервиса
+                                // Оно добавится автоматически из параметров.
+                                private bool  $isDebug)
     {
     }
 
@@ -40,7 +43,7 @@ class ApiExceptionListener
         // Если код 500+ или свойство логирования нашего маппинга тру, то возвращает логи об ошибке
         if ($mapping->getCode() >= Response::HTTP_INTERNAL_SERVER_ERROR || $mapping->isLoggable())
         {
-
+            // Возвращает trace нашей ошибки в консоль если установлен monolog-bundle
             $this->logger->error($throwable->getMessage(),[
                 'trace' => $throwable->getTraceAsString(),
                 // возвращает ничего если предыдущего исключения не было и сообщение о предыдущем исключении если оно было
@@ -55,8 +58,11 @@ class ApiExceptionListener
         // который находится непосредственно в классе исключения
         $message = $mapping->isHidden() ? Response::$statusTexts[$mapping->getCode()] : $throwable->getMessage();
 
-        //
-        $data = $this->serializer->serialize(new ErrorResponse($message), JsonEncoder::FORMAT);
+        // Если Debug true то возвращает трейс ошибки
+        $details = $this->isDebug ? ['trace' => $throwable->getTraceAsString()]: null;
+
+        // Сериализирует наш ответ в Json Формат, ErrorResponse возвращает нам ответ json на нашем экране
+        $data = $this->serializer->serialize(new ErrorResponse($message,$details), JsonEncoder::FORMAT);
 
         // Сформируем наш ответ. пустой массив это хедеры мы тут их не передаем, json = true говорит о том что данные уже в
         // Json не нужно их кодировать
