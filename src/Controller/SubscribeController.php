@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
+use App\Attribute\RequestBody;
 use App\Service\SubscriberService;
 use App\Models\SubscriberRequest;
-use OpenApi\Attributes\RequestBody;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,7 +28,7 @@ class SubscribeController extends AbstractController
      *
      *     @Model(type=SubscriberRepository::class))
      */
-    #[Route('/api/v1/subscribe', name: 'app_subscribe', methods: ['POST'])]
+    #[Route(path: '/api/v1/subscribe', name: 'app_subscribe', methods: ['POST'])]
     // с помощью атрибута src/Attribute/RequestBody
     public function action(#[RequestBody] SubscriberRequest $subscriberRequest): Response
     {

@@ -13,11 +13,14 @@ class ValidationException extends RuntimeException
     {
 
         parent::__construct('validation failed');
+
     }
 
     public function getViolation(): ConstraintViolationListInterface
     {
+
         return $this->violation;
+
     }
 
 }
