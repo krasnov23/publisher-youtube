@@ -23,6 +23,8 @@ class BookService
 
         // Берет наш объект бук из тех книг который подходят под определенную категорию
         // и переписывает их в массив из объектов класса BookListItem
+        // В данном случае $this это каждый объект найденного по категории репозитория то есть объекты класса Book
+        //
         $mapping = array_map([$this, 'map'], $this->bookRepository->findBooksByCategoryId($categoryId));
 
 

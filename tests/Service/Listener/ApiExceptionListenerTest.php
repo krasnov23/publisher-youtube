@@ -316,7 +316,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
         // Перехватывает ошибку
         $event = $this->createEvent(new InvalidArgumentException('error message'));
 
-        // Добавляем тру
+        // Добавляем тру, для включения дебага, который в верхней строке будет проходить проверку на трейс
         $this->runListener($event,true);
 
         // Код ответа один и тот же

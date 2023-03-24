@@ -9,6 +9,8 @@ parameters:
         # loggable - обычно требуется только когда ответ 500, по умолчанию он false поэтому убираем
         # В СЛУЧАЕ С BookCategoryNotFoundException логировать ничего не нужно
         App\Exceptions\BookCategoryNotFoundException: { code: 404,hidden: false}
+        App\Exceptions\SubscriberAlreadyExistsException: { code: 409,hidden: false }
+        App\Exceptions\RequestBodyConvertException: { code: 400,hidden: false }
 
 
 services:
@@ -45,4 +47,14 @@ services:
         # Приоритет 10, для того чтобы наш листенере срабатывал раньше чем все остальное
         tags:
             - {name: kernel.event_listener, event: kernel.exception, priority: 10}
+
+
+    App\Listener\ValidationExceptionListener:
+        # Ставим priority 15 так как он должен срабатывать до ApiExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, priority: 15 }
+
+
+
+
 
