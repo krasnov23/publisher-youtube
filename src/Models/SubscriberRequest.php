@@ -14,7 +14,6 @@ class SubscriberRequest
     #[NotBlank]
     private string $email;
 
-
     // агрид всегда будет тру
     #[IsTrue]
     #[NotBlank]

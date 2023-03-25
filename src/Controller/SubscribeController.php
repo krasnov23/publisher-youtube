@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Attribute\RequestBody;
 use App\Service\SubscriberService;
 use App\Models\SubscriberRequest;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,7 +28,7 @@ class SubscribeController extends AbstractController
      *     @Model(type=SubscriberRepository::class))
      */
     #[Route(path: '/api/v1/subscribe', name: 'app_subscribe', methods: ['POST'])]
-    // с помощью атрибута src/Attribute/RequestBody
+    // с помощью атрибута App/Attribute/RequestBody
     public function action(#[RequestBody] SubscriberRequest $subscriberRequest): Response
     {
         // Передаем СабскрайбСервису наш объект в котором будет емейл и разрешение на рассылку емейлов в виде (true/false)

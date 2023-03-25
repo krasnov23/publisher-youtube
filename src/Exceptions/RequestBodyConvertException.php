@@ -8,7 +8,7 @@ class RequestBodyConvertException extends \RunTimeException
 
     public function __construct(\Throwable $previous)
     {
-        parent::__construct('error with serialization',0, $previous);
+        parent::__construct('error with unmarshalling request body',0, $previous);
     }
 
 }
