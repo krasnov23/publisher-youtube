@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use JetBrains\PhpStorm\Internal\LanguageLevelTypeAware;
+
 use RuntimeException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
