@@ -11,7 +11,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Annotations as OA;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use App\Repository\SubscriberRepository;
-use App\Models\ErrorResponse;
 
 
 class SubscribeController extends AbstractController
@@ -21,22 +20,12 @@ class SubscribeController extends AbstractController
 
     }
 
-
-    // RequestBody Прописываем то, что возвращате нам атрибут RequestBody
-
     /**
      * @OA\Response(
      *     response=200,
      *     description="Subscribe email to newsletter mailing list",
-     *)
-     * @OA\Response(
-     *     response="400"
-     *     description="Validation failed"
-     *     @Model(type=ErrorResponse::class)
-     * )
-     * @OA\RequestBody(
-     *     @Model(type=SubscriberRequest::class)
-     * )
+     *
+     *     @Model(type=SubscriberRepository::class))
      */
     #[Route(path: '/api/v1/subscribe', name: 'app_subscribe', methods: ['POST'])]
     // с помощью атрибута App/Attribute/RequestBody
