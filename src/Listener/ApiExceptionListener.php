@@ -2,6 +2,7 @@
 
 namespace App\Listener;
 
+use App\Models\ErrorDebugDetails;
 use App\Models\ErrorResponse;
 use App\Service\ExceptionHandler\ExceptionMapping;
 use App\Service\ExceptionHandler\ExceptionMappingResolver;
@@ -59,7 +60,7 @@ class ApiExceptionListener
         $message = $mapping->isHidden() ? Response::$statusTexts[$mapping->getCode()] : $throwable->getMessage();
 
         // Если Debug true то возвращает трейс ошибки
-        $details = $this->isDebug ? ['trace' => $throwable->getTraceAsString()]: null;
+        $details = $this->isDebug ? new ErrorDebugDetails($throwable->getTraceAsString()): null;
 
         // Сериализирует наш ответ в Json Формат, ErrorResponse возвращает нам ответ json на нашем экране (т.е пользователю)
         $data = $this->serializer->serialize(new ErrorResponse($message,$details), JsonEncoder::FORMAT);
