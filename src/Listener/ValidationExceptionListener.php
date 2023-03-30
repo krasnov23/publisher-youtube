@@ -4,15 +4,11 @@ namespace App\Listener;
 
 use App\Exceptions\ValidationException;
 use App\Models\ErrorResponse;
-use App\Models\ErrorValidationDetails;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\ConstraintViolationInterface;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
-
 
 class ValidationExceptionListener
 {
@@ -32,26 +28,11 @@ class ValidationExceptionListener
 
         // Сереализируем наши данные об ошибке в Json
         $data = $this->serializer->serialize(new ErrorResponse($throwable->getMessage(),
-            $this->formatViolations($throwable->getViolation())),
+            ['violations' => $throwable->getViolation()]),
             JsonEncoder::FORMAT);
 
 
         // Возврат ответ в JsonFormatе , json = true означает что на вход мы даем уже сериализированный json
         $exceptionEvent->setResponse(new JsonResponse($data, Response::HTTP_BAD_REQUEST ,[],true));
-    }
-
-
-    // Получаем массив объектов ErrorValidationDetails,
-    // данный метод создан для того чтобы мы могли видеть наши ошибки в слаггере.
-    private function formatViolations(ConstraintViolationListInterface $violations): ErrorValidationDetails
-    {
-        $details = new ErrorValidationDetails();
-
-        /** @var ConstraintViolationInterface $violation */
-        foreach ($violations as $violation){
-            $details->addViolation($violation->getPropertyPath(),$violation->getMessage());
-        }
-
-        return $details;
     }
 }

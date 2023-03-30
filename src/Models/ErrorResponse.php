@@ -2,10 +2,7 @@
 
 namespace App\Models;
 
-use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
-use App\Models\ErrorDebugDetails;
-use App\Models\ErrorValidationDetails;
 
 
 class ErrorResponse
@@ -22,16 +19,8 @@ class ErrorResponse
     }
 
     // Уточняем что в OA передает типа объект
-    // Если у нас параметр указан просто как object наш слаггер делает этот параметр пустым, поскольку мы знаем что в эти детали
-    // может прийти нам необходимо добавить немного параметров, в эту аннотацию и добавим мы параметр oneOf
-    // в oneOf мы можем передать одну или несколько схем и добавляем далее ref (референс, ссылку)
-    // ErrorDebugDetails исполняется в ApiExceptionListener.php, а ErrorValidationDetails исполняется в ValidationExceptionListener
-    //
     /**
-     * @OA\Property(type="object",oneOf={
-     *     @OA\Schema(ref=@Model(type=ErrorDebugDetails::class)),
-     *     @OA\Schema(ref=@Model(type=ErrorValidationDetails::class)),
-     * })
+     * @OA\Property(type="object")
      */
     public function getDetails(): mixed
     {
