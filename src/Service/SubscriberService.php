@@ -31,7 +31,6 @@ class SubscriberService
         $subscriber->setEmail($subscriberRequest->getEmail());
 
         $this->entityManager->persist($subscriber);
-
         $this->entityManager->flush();
 
     }

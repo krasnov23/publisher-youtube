@@ -20,6 +20,7 @@ class Subscriber
     #[ORM\Column(length: 255)]
     private string $email ;
 
+    // datetime_immutable - чтобы пользователь не мог прибавить что-то к дате, а была возможность только ее перезаписать
     #[ORM\Column(type: "datetime_immutable")]
     private \DateTimeInterface $createdAt;
 

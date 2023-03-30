@@ -24,6 +24,7 @@ class Book
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
+    // Симплэрей под копотом то что он делает это применяет методы для сериализации и десериализации функции (implode,explode)
     #[ORM\Column(type: 'simple_array')]
     private array $authors = [];
 
@@ -37,10 +38,13 @@ class Book
      * @var Collection<BookCategory>
      */
     #[ORM\ManyToMany(targetEntity: BookCategory::class)]
+    // Раньше это был тип ArrayCollection, но с какой-то из версии php он стал интерфейс Collection, так что если мы укажем
+    // тип ArrayCollection у нас все сломается, потому что по факту туда будет приходить PersistableCollection
     private Collection $categories;
 
     public function __construct()
     {
+        // Инициализировать мы можем как ArrayCollection
         $this->categories = new ArrayCollection();
     }
 

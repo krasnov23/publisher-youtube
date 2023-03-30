@@ -7,6 +7,7 @@ use Helmich\JsonAssert\JsonAssertions;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+// WebTestCase - тест кейс который позволяет делать http запрос к серверу без запуска самого сервера.
 abstract class AbstractControllerTest extends WebTestCase
 {
 
