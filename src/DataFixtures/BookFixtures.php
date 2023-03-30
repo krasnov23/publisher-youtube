@@ -14,7 +14,6 @@ class BookFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        //
         $androidCategory = $this->getReference(BookCategoryFixtures::ANDROID_CATEGORY);
         $devicesCategory = $this->getReference(BookCategoryFixtures::DEVICES_CATEGORY);
 
@@ -27,7 +26,7 @@ class BookFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    // Указываем зависимость, получаем наши референсы
+    // Указываем зависимость
     public function getDependencies(): array
     {
         return [
