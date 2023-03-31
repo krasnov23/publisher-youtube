@@ -3,6 +3,7 @@
 namespace App\Tests\Service\Listener;
 
 use App\Listener\ApiExceptionListener;
+use App\Models\ErrorDebugDetails;
 use App\Models\ErrorResponse;
 use App\Service\ExceptionHandler\ExceptionMapping;
 use App\Service\ExceptionHandler\ExceptionMappingResolver;
@@ -305,11 +306,17 @@ class ApiExceptionListenerTest extends AbstractTestCase
         $this->serializer->expects($this->once())
             ->method('serialize')
             ->with($this->callback(
+                // Возвращает ErrorResponse при условии что полученное сообщение
                 // Вернет ErrorResponse, для того чтобы нам правильно составить ожидание, нам надо взять responseMessage
                 function (ErrorResponse $response) use ($responseMessage){
+                    /** @var ErrorDebugDetails|object $details */
+                    $details = $response->getDetails();
                     // Возвращаем тру или фолс если вернет фолс тест завалится если тру тест продолжится
                     // Сравниваем наше сообщение и что трейс вообще пришел, то есть он не пустой
-                    return $response->getMessage() == $responseMessage && !empty($response->getDetails()['trace']);
+                    return $response->getMessage() == $responseMessage &&
+                        // Проверяем то что детали полученного ответа объект ErrorDebugDetails
+                        $details instanceof ErrorDebugDetails &&
+                        !empty($details->getTrace());
                 }),JsonEncoder::FORMAT)
             ->willReturn($responseBody);
 
