@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Annotations as OA;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use App\Repository\SubscriberRepository;
+use App\Models\ErrorResponse;
 
 
 class SubscribeController extends AbstractController
@@ -20,12 +21,18 @@ class SubscribeController extends AbstractController
 
     }
 
+    // Модель при двухсотом ответе не указываем, потому что ничего не возвращает
     /**
      * @OA\Response(
      *     response=200,
      *     description="Subscribe email to newsletter mailing list",
-     *
-     *     @Model(type=SubscriberRepository::class))
+     * )
+     * @OA\Response(
+     *     response=400,
+     *     description="We give not valid data",
+     *     @Model(type=ErrorResponse::class)
+     * )
+     * @OA\RequestBody(@Model(type=SubscriberRequest::class))
      */
     #[Route(path: '/api/v1/subscribe', name: 'app_subscribe', methods: ['POST'])]
     // с помощью атрибута App/Attribute/RequestBody
