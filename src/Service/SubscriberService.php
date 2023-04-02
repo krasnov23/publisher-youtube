@@ -26,9 +26,10 @@ class SubscriberService
             throw new SubscriberAlreadyExistsException();
         }
 
+        // В данном методе замокаем поведение еще у энтитиМенеджера
         $subscriber = new Subscriber();
-
         $subscriber->setEmail($subscriberRequest->getEmail());
+
 
         $this->entityManager->persist($subscriber);
 
