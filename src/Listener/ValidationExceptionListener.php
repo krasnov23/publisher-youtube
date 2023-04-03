@@ -35,7 +35,7 @@ class ValidationExceptionListener
             JsonEncoder::FORMAT);
 
 
-        // Возврат ответ в JsonFormatе , json = true означает что на вход мы даем уже сериализированный json
+        // Возврат ответ в JsonFormat , json = true означает что на вход мы даем уже сериализированный json
         $exceptionEvent->setResponse(new JsonResponse($data, Response::HTTP_BAD_REQUEST ,[],true));
     }
 

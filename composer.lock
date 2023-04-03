@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ef6ef1c9a62aa2157053b73e34478e41",
+    "content-hash": "2f5e9a298151137e7a9f2673dbe3a754",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -5619,6 +5619,50 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "appeltaert/phpunit-assertion-message",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/appeltaert/phpunit-assertion-message.git",
+                "reference": "a636a08a92b058a8675a6ca8f49e4afbb1cef137"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/appeltaert/phpunit-assertion-message/zipball/a636a08a92b058a8675a6ca8f49e4afbb1cef137",
+                "reference": "a636a08a92b058a8675a6ca8f49e4afbb1cef137",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "Appeltaert\\PAM\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Enhanced PHPUnit Assertion Messages - Debug assertions without creating a mess.",
+            "keywords": [
+                "phpunit",
+                "testing"
+            ],
+            "support": {
+                "issues": "https://github.com/appeltaert/phpunit-assertion-message/issues",
+                "source": "https://github.com/appeltaert/phpunit-assertion-message/tree/v1.0.0"
+            },
+            "time": "2018-02-23T22:12:49+00:00"
+        },
         {
             "name": "composer/pcre",
             "version": "3.1.0",

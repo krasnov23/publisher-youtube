@@ -59,7 +59,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
         // Резолвер ожидает что будет вызван метод резолв с аргументом InvalidArgumentException::class который вернет объект
         // ExceptionMapping c указанными ключами и значениями
         $this->resolver->expects($this->once())->method('resolve')
-            ->with(\InvalidArgumentException::class)->willReturn($mapping);
+            ->with(InvalidArgumentException::class)->willReturn($mapping);
 
         // Сериалайзер ожидает метода сериалайз, в который будут переданы класс ошибки с сообщением об ошибке в формате джсон
         $this->serializer->expects($this->once())
@@ -67,14 +67,13 @@ class ApiExceptionListenerTest extends AbstractTestCase
             ->with(new ErrorResponse($response),JsonEncoder::FORMAT)
             ->willReturn($responseBody);
 
-        // Перехватывает ошибку
-        $event = $this->createEvent(new InvalidArgumentException('test'));
+        // Создаем ошибку
+        $event = $this->createExceptionEvent(new InvalidArgumentException('test'));
 
         $this->runListener($event);
 
         // Получает ответ
         $response = $event->getResponse();
-
 
         // Код ответа один и тот же
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
@@ -104,7 +103,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
         // Резолвер ожидает что будет вызван метод резолв с аргументом InvalidArgumentException::class который вернет объект
         // ExceptionMapping c указанными ключами и значениями
         $this->resolver->expects($this->once())->method('resolve')
-            ->with(\InvalidArgumentException::class)->willReturn($mapping);
+            ->with(InvalidArgumentException::class)->willReturn($mapping);
 
         // Сериалайзер ожидает метода сериалайз, в который будут переданы класс ошибки с сообщением об ошибке в формате джсон
         $this->serializer->expects($this->once())
@@ -113,7 +112,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
             ->willReturn($responseBody);
 
         // Перехватывает ошибку
-        $event = $this->createEvent(new InvalidArgumentException('test'));
+        $event = $this->createExceptionEvent(new InvalidArgumentException('test'));
 
 
         $this->runListener($event);
@@ -149,7 +148,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
         // Резолвер ожидает что будет вызван метод резолв с аргументом InvalidArgumentException::class который вернет объект
         // ExceptionMapping c указанными ключами и значениями
         $this->resolver->expects($this->once())->method('resolve')
-            ->with(\InvalidArgumentException::class)->willReturn($mapping);
+            ->with(InvalidArgumentException::class)->willReturn($mapping);
 
         // Сериалайзер ожидает метода сериалайз, в который будут переданы класс ошибки с сообщением об ошибке в формате джсон
         $this->serializer->expects($this->once())
@@ -165,7 +164,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
             ->method('error');
 
         // Перехватывает ошибку
-        $event = $this->createEvent(new InvalidArgumentException('test'));
+        $event = $this->createExceptionEvent(new InvalidArgumentException('test'));
 
 
         $this->runListener($event);
@@ -201,7 +200,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
         // Резолвер ожидает что будет вызван метод резолв с аргументом InvalidArgumentException::class который вернет объект
         // ExceptionMapping c указанными ключами и значениями
         $this->resolver->expects($this->once())->method('resolve')
-            ->with(\InvalidArgumentException::class)->willReturn($mapping);
+            ->with(InvalidArgumentException::class)->willReturn($mapping);
 
         // Сериалайзер ожидает метода сериалайз, в который будут переданы класс ошибки с сообщением об ошибке в формате джсон
         $this->serializer->expects($this->once())
@@ -215,7 +214,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
             ->with('error message',$this->anything());
 
         // Перехватывает ошибку
-        $event = $this->createEvent(new InvalidArgumentException('error message'));
+        $event = $this->createExceptionEvent(new InvalidArgumentException('error message'));
 
 
         $this->runListener($event);
@@ -249,7 +248,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
         // Резолвер ожидает что будет вызван метод резолв с аргументом InvalidArgumentException::class который вернет объект
         // ExceptionMapping c указанными ключами и значениями
         $this->resolver->expects($this->once())->method('resolve')
-            ->with(\InvalidArgumentException::class)->willReturn(null);
+            ->with(InvalidArgumentException::class)->willReturn(null);
 
         // Сериалайзер ожидает метода сериалайз, в который будут переданы класс ошибки с сообщением об ошибке в формате джсон
         $this->serializer->expects($this->once())
@@ -263,7 +262,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
             ->with('error message',$this->anything());
 
         // Перехватывает ошибку
-        $event = $this->createEvent(new InvalidArgumentException('error message'));
+        $event = $this->createExceptionEvent(new InvalidArgumentException('error message'));
 
         // Добавляем тру потому что мы в дебаг режиме
         $this->runListener($event);
@@ -321,7 +320,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
             ->willReturn($responseBody);
 
         // Перехватывает ошибку
-        $event = $this->createEvent(new InvalidArgumentException('error message'));
+        $event = $this->createExceptionEvent(new InvalidArgumentException('error message'));
 
         // Добавляем тру, для включения дебага, который в верхней строке будет проходить проверку на трейс
         $this->runListener($event,true);
@@ -337,7 +336,6 @@ class ApiExceptionListenerTest extends AbstractTestCase
     }
 
 
-
     // Нам всегда понадобится вызвать создать Listener, Принять в него Ивент и получить респонс поэтому для сокращения теста
     // Создаем новые метод.
     private function runListener(ExceptionEvent $event,bool $isDebug = false ): void
@@ -347,39 +345,6 @@ class ApiExceptionListenerTest extends AbstractTestCase
         // Принимает ExceptionEvent
         $listener($event);
 
-    }
-
-    private function createEvent(InvalidArgumentException $e): ExceptionEvent
-    {
-
-        return new ExceptionEvent(
-
-            // kernel - ядро
-            $this->createTestKernel(),
-            // Request пустой потому что он нам впринципе не нужен
-            new Request(),
-            // MainRequest основной запрос который приходит от клиента, в процессе его обработки могут быть запущенны
-            // еще запросы СубРеквесты нас же интересует только один запрос (в данном случае)
-            HttpKernelInterface::MAIN_REQUEST,
-            $e
-        );
-
-
-
-    }
-
-    // просто наследуем HttpKernelInterface и он возвращает простой ответ
-    private function createTestKernel(): HttpKernelInterface
-    {
-        // На любой запрос он возвращает ответ с содержимым тест
-        return new class() implements HttpKernelInterface
-        {
-
-            public function handle(Request $request, int $type = self::MAIN_REQUEST, bool $catch = true): Response
-            {
-                return new Response('testing');
-            }
-        };
     }
 
     // 1. Создается Event, который отправляется в Listener, при том что аргументами Listenera уже переданны моки объектов.
