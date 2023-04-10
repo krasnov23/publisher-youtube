@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Book;
+use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -17,10 +18,15 @@ class BookFixtures extends Fixture implements DependentFixtureInterface
         $androidCategory = $this->getReference(BookCategoryFixtures::ANDROID_CATEGORY);
         $devicesCategory = $this->getReference(BookCategoryFixtures::DEVICES_CATEGORY);
 
-        $book = (new Book())->setTitle('RXJava for Android Developer')->setPublicationData(new \DateTime('2019-04-01'))
-        ->setMeap(false)->setAuthors(['P.Novikov'])->setSlug('rxjava-for-android-developers')
-        ->setCategories(new ArrayCollection([$androidCategory, $devicesCategory]))
-        ->setImage('rx-java-hi.png');
+        $book = (new Book())->setTitle('RXJava for Android Developer')
+            ->setPublicationData(new DateTimeImmutable('2019-04-01'))
+            ->setMeap(false)
+            ->setIsbn("123123")
+            ->setDescription('Some description')
+            ->setAuthors(['P.Novikov'])
+            ->setSlug('rxjava-for-android-developers')
+            ->setCategories(new ArrayCollection([$androidCategory, $devicesCategory]))
+            ->setImage('rx-java-hi.png');
 
         $manager->persist($book);
         $manager->flush();

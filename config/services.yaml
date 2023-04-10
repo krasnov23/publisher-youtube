@@ -8,6 +8,9 @@ parameters:
         # hidden - есть ли какая-то секретная информация в исключении, # loggable свойство определяет стоит ли логировать это исключение
         # loggable - обычно требуется только когда ответ 500, по умолчанию он false поэтому убираем
         # В СЛУЧАЕ С BookCategoryNotFoundException логировать ничего не нужно
+        # Исключение ниже указываем для того чтобы нам выдавало массив {"message" : "not found"} в случае
+        # поиска не существующей страницы
+        Symfony\Component\HttpKernel\Exception\NotFoundHttpException: { code: 404 }
         App\Exceptions\BookCategoryNotFoundException: { code: 404,hidden: false}
         App\Exceptions\SubscriberAlreadyExistsException: { code: 409,hidden: false }
         App\Exceptions\RequestBodyConvertException: { code: 400,hidden: false }

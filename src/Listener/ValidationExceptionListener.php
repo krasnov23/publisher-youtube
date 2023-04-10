@@ -46,7 +46,7 @@ class ValidationExceptionListener
 
         /** @var ConstraintViolationInterface $violation */
         foreach ($violations as $violation)
-        {
+        {   // Возвращает объект с свойством массивом в котором храниться объект ErrorValidationDetailsItem
             $details->addViolation($violation->getPropertyPath(),$violation->getMessage());
         }
 

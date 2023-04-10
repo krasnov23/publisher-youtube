@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Entity\BookCategory;
-use App\Models\BookCategoryListItem;
+use App\Models\BookCategoryModel;
 use App\Models\BookCategoryListResponse;
 use App\Repository\BookCategoryRepository;
 
@@ -25,7 +25,7 @@ class BookCategoryService
             // То есть берет каждый элемент массива категорис и передает каждый параметр в сущность BookCategoryListItem,
             // сохраняя все это в список
             // array_map - берется список и каждый элемент списка перекладывается в то что происходит после знака =>
-            fn (BookCategory $bookCategory) => new BookCategoryListItem(
+            fn (BookCategory $bookCategory) => new BookCategoryModel(
                 $bookCategory->getId(), $bookCategory->getTitle(), $bookCategory->getSlug()
             ), $categories
         );

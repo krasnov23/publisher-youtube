@@ -31,7 +31,7 @@ class RequestBodyArgumentResolver implements ValueResolverInterface
         }
 
         try {
-            // Десерилизируем тело запроса
+            // Десерилизируем тело запроса,
             $model = $this->serializer->deserialize($request->getContent(),
                 // $argument->getType() - вернет класс SubscriberRequest
                 $argument->getType(),
@@ -52,11 +52,11 @@ class RequestBodyArgumentResolver implements ValueResolverInterface
             // Если человек действительно попадает в это исключение когда он не проходит валидацию
             // наш дефолтный обработчик, который мы писали в (урок 7 ютуб или исключения.txt) выдаст нам internal error
             // и распишет trace и врятли мы сможем понять что случилось, поэтому нам необходимо написать еще один обработчик
-            // чтобы понять что случилось, где произошла ошибка итд.
+            // чтобы понять что случилось, где произошла ошибка итд. (ValidationExceptionListener)
             throw new ValidationException($errors);
         }
 
-
+        // В конечном итоге вернет нам объект
         return [$model];
 
     }

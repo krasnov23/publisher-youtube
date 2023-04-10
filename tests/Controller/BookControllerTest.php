@@ -58,7 +58,9 @@ class BookControllerTest extends AbstractControllerTest
         $this->em->persist((new Book())->setTitle('Test Book')
             ->setImage('test.png')
             ->setMeap(true)
-            ->setPublicationData(new \DateTime())
+            ->setIsbn("123123")
+            ->setDescription('test')
+            ->setPublicationData(new \DateTimeImmutable())
             ->setAuthors(['V.Pupkin'])
             ->setCategories(new ArrayCollection([$bookCategory]))
             ->setSlug('test-book'));

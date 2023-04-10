@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Models\ErrorResponse;
+use App\Models\BookDetails;
 
 
 class BookController extends AbstractController
@@ -37,5 +38,23 @@ class BookController extends AbstractController
     public function booksByCategory(int $id): Response
     {
         return $this->json($this->bookService->getBookByCategory($id));
+    }
+
+    /**
+     * @OA\Response(
+     *     response=200,
+     *     description="returns books by category",
+     *
+     *     @Model(type=BookDetails::class))
+     * @OA\Response(
+     *     response=404,
+     *     description="Book Category not found",
+     *     @Model(type=ErrorResponse::class)
+     * )
+     */
+    #[Route(path: 'api/v1/book/{id}', methods:['GET'])]
+    public function booksById(int $id): Response
+    {
+        return $this->json($this->bookService->getBookById($id));
     }
 }

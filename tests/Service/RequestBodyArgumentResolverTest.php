@@ -38,12 +38,11 @@ class RequestBodyArgumentResolverTest extends AbstractTestCase
         // метод resolve принимает 2 аргумента, все что он принимает это объекты (объект Request, объект ArgumentMetadata)
         // поэтому их мы не мокаем, мокаем мы обычно сервисы
         $meta = new ArgumentMetadata('some', null, false,false,
-            // Атрибуты false и RequestBody(), которые могли бы идти после defaultValue , если бы мы проверяли на то что
-            // нам возвращают не пустой массив
             null);
 
         // Проверка на то что возвращает пустой массив
         // в качестве аргумента отправляем пустой Request
+        // посколько в $meta мы не задали атрибут равный RequestBody он вернет нам пустой массив
         $this->assertEmpty($this->createResolver()->resolve(new Request(),$meta));
 
     }
@@ -64,6 +63,7 @@ class RequestBodyArgumentResolverTest extends AbstractTestCase
 
         $this->serializer->expects($this->once())
         ->method('deserialize')
+            // вместо $request->getcontent 'testing content', вместо argument->getType
         ->with('testing content',\stdClass::class,JsonEncoder::FORMAT)
         ->willThrowException(new \Exception());
 
@@ -103,6 +103,8 @@ class RequestBodyArgumentResolverTest extends AbstractTestCase
             ->willReturn(new ConstraintViolationList([
                 // Для того чтобы все работало корректно нам нужно создать несколько аргументов (в данном случае их 6)
                 // потому что те что идут дальше прописаны как null
+                // В данном случае ConstraintViolationList будет содержать ConstraintViolation так как якобы обнаруженны
+                // ошибки при валидации
                 new ConstraintViolation('error',null,[],null,'somve',null)
             ]));
 
@@ -147,6 +149,7 @@ class RequestBodyArgumentResolverTest extends AbstractTestCase
         // получаемого массива
         $actual = $this->createResolver()->resolve($request,$meta);
 
+        // $actual будет выдано в след виде 0 => array:1 ["test" => true ];
         $this->assertEquals($body,$actual[0]);
 
 

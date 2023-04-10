@@ -9,6 +9,7 @@ use App\Models\BookListItem;
 use App\Models\BookListResponse;
 use App\Repository\BookCategoryRepository;
 use App\Repository\BookRepository;
+use App\Repository\ReviewRepository;
 use App\Service\BookService;
 use App\tests\AbstractTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,6 +22,8 @@ class BookServiceTest extends AbstractTestCase
 
         $bookCategoryRepository = $this->createMock(BookCategoryRepository::class);
 
+        $reviewRepository = $this->createMock(ReviewRepository::class);
+
         // Тест на то что при методе фаинд с айди 130 не будет найдена данная категория книг
         // Ожидает что при выбросе айди = 130, mock выбросит исключение
         $bookCategoryRepository->expects($this->once())
@@ -31,12 +34,13 @@ class BookServiceTest extends AbstractTestCase
 
         $this->expectException(BookCategoryNotFoundException::class);
 
-        (new BookService($bookRepository, $bookCategoryRepository))->getBookByCategory(130);
+        (new BookService($bookRepository, $bookCategoryRepository,$reviewRepository))->getBookByCategory(130);
     }
 
     public function testGetBooksByCategory(): void
     {
         $bookRepository = $this->createMock(BookRepository::class);
+        $reviewRepository = $this->createMock(ReviewRepository::class);
 
         // Эмулирует метод файндбайкатегори с айди равным 130, и ожидает что он вернет нам результат метода createBookEntity
         // Эмулирует метод который находится в BookRepository, мы хотим вернуть класс Book, но поскольку это занимает у нас несколько
@@ -59,7 +63,7 @@ class BookServiceTest extends AbstractTestCase
             ->willReturn(true);
 
         // Отправляет наши значения в BookService и должен дать нам на выходе то что будет указанно в expected
-        $service = new BookService($bookRepository, $bookCategoryRepository);
+        $service = new BookService($bookRepository, $bookCategoryRepository,$reviewRepository);
 
         // Для проверки конечного результата создаем метод который будет указан ниже
         $expected = new BookListResponse([$this->createBookItemModel()]);
@@ -73,11 +77,13 @@ class BookServiceTest extends AbstractTestCase
             ->setTitle('Test Book')
             ->setSlug('test-book')
             ->setMeap(false)
+            ->setIsbn('123123')
+            ->setDescription('test description')
             ->setAuthors(['Tester'])
             ->setImage('tester.jpg')
             // В данном случае пустой, такой же как и сущность
             ->setCategories(new ArrayCollection())
-            ->setPublicationData(new \DateTime('2020-10-10'));
+            ->setPublicationData(new \DateTimeImmutable('2020-10-10'));
 
         $this->setEntityId($book, 123);
 

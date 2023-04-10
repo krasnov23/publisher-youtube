@@ -10,19 +10,17 @@ class SubscriberControllerTest extends AbstractControllerTest
 {
 
     // В данном случае все что нам нужно это отправить запрос и получить в обратку 200
-    /*public function testSubscribe(): void
+    public function testSubscribe(): void
     {
         // Подготавливаем наш контент для получения кода 200
-        $content = json_encode(["email" => "test@test.com", "agreed" => true]);
-
-        $json = file_get_contents('testData.json');
+        $content = json_encode(["email" => "test1@test.com", "agreed" => true]);
 
         // Отправляем пост запрос
-        $this->client->request('POST','/api/v1/subscribe',[],[],[],$json);
+        $this->client->request('POST','/api/v1/subscribe',[],[],[],$content);
 
         $this->assertResponseIsSuccessful();
 
-    }*/
+    }
 
     public function testSubscribeNotAgreed(): void
     {
