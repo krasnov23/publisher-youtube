@@ -20,12 +20,12 @@ class Review
     private int $rating;
 
     #[ORM\Column(type: 'text')]
-    private int $content;
+    private string $content;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $author;
 
-    // Добавляем связь до книги
+    // Добавляем связь до книги, ниже указываем что связь не может быть нулевой
     #[ORM\JoinColumn(nullable: false)]
     #[ORM\ManyToOne(targetEntity: Book::class,inversedBy: 'reviews')]
     private Book $book;
@@ -58,7 +58,7 @@ class Review
         return $this;
     }
 
-    public function getContent(): int
+    public function getContent(): string
     {
         return $this->content;
     }

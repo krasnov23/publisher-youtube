@@ -56,12 +56,11 @@ class BookService
             $rating = $this->reviewRepository->getBookTotalRatingSum($id) / $reviews;
         }
 
-        //
-        $formats = $this->mapFormats($book->getFormats());
-
         $categories = $book->getCategories()
-                ->map(fn (BookCategory $bookCategory) => (new BookCategoryModel(
-                    $bookCategory->getId(), $bookCategory->getTitle(), $bookCategory->getSlug())));
+            ->map(fn (BookCategory $bookCategory) => (new BookCategoryModel(
+                $bookCategory->getId(), $bookCategory->getTitle(), $bookCategory->getSlug())));
+
+        $formats = $this->mapFormats($book->getFormats());
 
         return (new BookDetails())
             ->setId($book->getId())
@@ -85,14 +84,15 @@ class BookService
      */
     private function mapFormats(Collection $formats): array
     {
-        return $formats->map(fn(BookToBookFormat $formatJoin) => (new BookFormatModel())
+        $a = $formats->map(fn(BookToBookFormat $formatJoin) => (new BookFormatModel())
             ->setId($formatJoin->getFormat()->getId())
             ->setTitle($formatJoin->getFormat()->getTitle())
             ->setDescription($formatJoin->getFormat()->getDescription())
             ->setComment($formatJoin->getFormat()->getComment())
             ->setPrice($formatJoin->getPrice())
-            ->setDiscountPercent($formatJoin->getDiscountPercent())
-        );
+            ->setDiscountPercent($formatJoin->getDiscountPercent()));
+
+        return $a;
     }
 
     private function map(Book $book): BookListItem

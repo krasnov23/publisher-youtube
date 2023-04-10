@@ -35,7 +35,7 @@ class ReviewService
 
         if ($total > 0)
         {
-            $rating = $this->reviewRepository->getBookTotalRatingSum($id) / $total;
+            $rating = $ratingSum / $total;
         }
 
         return (new ReviewPage())

@@ -5,15 +5,10 @@ namespace App\Models;
 class BookFormatModel
 {
     private int $id;
-
     private string $title;
-
     private ?string $description;
-
     private ?string $comment;
-
     private float $price;
-
     private ?int $discountPercent;
 
     
