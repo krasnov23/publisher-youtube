@@ -15,6 +15,7 @@ use App\Repository\BookCategoryRepository;
 use App\Repository\BookRepository;
 use App\Repository\ReviewRepository;
 use Doctrine\Common\Collections\Collection;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 
 class BookService
 {
@@ -90,7 +91,7 @@ class BookService
             ->setDescription($formatJoin->getFormat()->getDescription())
             ->setComment($formatJoin->getFormat()->getComment())
             ->setPrice($formatJoin->getPrice())
-            ->setDiscountPercent($formatJoin->getDiscountPercent()));
+            ->setDiscountPercent($formatJoin->getDiscountPercent()))->toArray();
 
         return $a;
     }
