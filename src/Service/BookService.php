@@ -6,6 +6,7 @@ use App\Entity\Book;
 use App\Entity\BookCategory;
 use App\Entity\BookToBookFormat;
 use App\Exceptions\BookCategoryNotFoundException;
+use App\Mapper\BookMapper;
 use App\Models\BookCategoryModel;
 use App\Models\BookDetails;
 use App\Models\BookFormatModel;
@@ -21,7 +22,8 @@ class BookService
 {
     public function __construct(private BookRepository $bookRepository,
                                 private BookCategoryRepository $bookCategoryRepository,
-                                private ReviewRepository $reviewRepository)
+                                private ReviewRepository $reviewRepository,
+                                private RatingService $ratingService)
     {
     }
 
@@ -31,11 +33,10 @@ class BookService
             throw new BookCategoryNotFoundException();
         }
 
-        // Берет наш объект бук из тех книг который подходят под определенную категорию
-        // и переписывает их в массив из объектов класса BookListItem
-        // В данном случае $this это каждый объект найденного по категории репозитория то есть объекты класса Book
-        //
-        $mapping = array_map([$this, 'map'], $this->bookRepository->findBooksByCategoryId($categoryId));
+        // В данном случае берет массив из книг найденных по категории и каждую из книг отправляем в метод мап
+        // где уже метод перемапливает в модель BookListItem
+        $mapping = array_map(fn (Book $book) => BookMapper::map($book,new BookListItem()) ,
+            $this->bookRepository->findBooksByCategoryId($categoryId));
 
 
         return new BookListResponse($mapping);
@@ -49,13 +50,8 @@ class BookService
         // Считаем количество отзывов у этой книги по ID
         $reviews = $this->reviewRepository->countByBookId($id);
 
-        $rating = 0;
+        $rating = $this->ratingService->calcReviewRatingForBook($id,$reviews);
 
-        if ($reviews > 0)
-        {
-            // Считает сумму рейтингов по id книги
-            $rating = $this->reviewRepository->getBookTotalRatingSum($id) / $reviews;
-        }
 
         $categories = $book->getCategories()
             ->map(fn (BookCategory $bookCategory) => (new BookCategoryModel(
@@ -63,15 +59,7 @@ class BookService
 
         $formats = $this->mapFormats($book->getFormats());
 
-        return (new BookDetails())
-            ->setId($book->getId())
-            ->setTitle($book->getTitle())
-            ->setSlug($book->getSlug())
-            ->setImage($book->getImage())
-            ->setAuthors($book->getAuthors())
-            ->setMeap($book->isMeap())
-            ->setPublicationData($book->getPublicationData()->getTimestamp())
-            // Суммарный рейтинг всех комментариев деленный на количество отзывов
+        return BookMapper::map($book,new BookDetails())
             ->setRating($rating)
             ->setReviews($reviews)
             ->setFormats($formats)
@@ -96,17 +84,4 @@ class BookService
         return $a;
     }
 
-    private function map(Book $book): BookListItem
-    {
-        return (new BookListItem())
-            ->setId($book->getId())
-            ->setTitle($book->getTitle())
-            ->setSlug($book->getSlug())
-            ->setImage($book->getImage())
-            ->setAuthors($book->getAuthors())
-            ->setMeap($book->isMeap())
-            ->setPublicationData($book->getPublicationData()->getTimestamp()
-            )
-        ;
-    }
 }

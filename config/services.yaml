@@ -14,6 +14,7 @@ parameters:
         App\Exceptions\BookCategoryNotFoundException: { code: 404,hidden: false}
         App\Exceptions\SubscriberAlreadyExistsException: { code: 409,hidden: false }
         App\Exceptions\RequestBodyConvertException: { code: 400,hidden: false }
+        App\Exceptions\BookNotFoundException.php: { code: 404,hidden: false }
 
 
 services:

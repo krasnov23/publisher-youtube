@@ -63,7 +63,7 @@ class Review
         return $this->content;
     }
 
-    public function setContent(int $content): self
+    public function setContent(string $content): self
     {
         $this->content = $content;
 

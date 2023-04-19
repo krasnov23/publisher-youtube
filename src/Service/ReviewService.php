@@ -11,7 +11,7 @@ class ReviewService
 {
     private const PAGE_LIMIT = 5;
 
-    public function __construct(private ReviewRepository $reviewRepository)
+    public function __construct(private ReviewRepository $reviewRepository,private RatingService $ratingService)
     {
 
     }
@@ -25,18 +25,22 @@ class ReviewService
         // элемента, поэтому первый элемент который мы получим будет 11)
         $offset = max($page - 1,0) * self::PAGE_LIMIT;
 
+        // Получает массив сущностей книг ограниченных страницей книги и лимитов на эту страницу равным 5
         $paginator = $this->reviewRepository->getPageByBookId($id,$offset,self::PAGE_LIMIT);
 
-        $ratingSum = $this->reviewRepository->getBookTotalRatingSum($id);
+        // Массив Items создан для того чтобы проще шло тестирование
+        $items = [];
+
+        // в цикле каждый отзыв о книги перемапливается в модель с помощью метода map указанного ниже
+        foreach ($paginator as $item)
+        {
+            $items[] = $this->map($item);
+        }
 
         // Paginator реализует интерфейс Countable поэтому мы можем применить просто Count и получим всё количество комментариев
         $total = count($paginator);
-        $rating = 0;
 
-        if ($total > 0)
-        {
-            $rating = $ratingSum / $total;
-        }
+        $rating = $this->ratingService->calcReviewRatingForBook($id,$total);
 
         return (new ReviewPage())
             ->setRating($rating)
@@ -46,8 +50,9 @@ class ReviewService
             ->setAmountOfPages(ceil($total / self::PAGE_LIMIT))
             // Поскольку стандартные функции по типу array_map не умеют работать с итератерами,
             // Они умеют работать только с массивами. В данном случае мы получаем getArrayCopy, т.к метод
-            // getPageByBookId возвращает нам Pagiantor, а не array
-            ->setItems(array_map([$this,'map'],$paginator->getIterator()->getArrayCopy()));
+            // getPageByBookId возвращает нам Paginator, а не array
+            // Возвращает массив ReviewModelей
+            ->setItems($items);
     }
 
     private function map(Review $review): ReviewModel

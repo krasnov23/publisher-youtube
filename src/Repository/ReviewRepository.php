@@ -3,9 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Review;
+use Countable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Traversable;
 
 /**
  * @extends ServiceEntityRepository<Review>
@@ -22,8 +24,11 @@ class ReviewRepository extends ServiceEntityRepository
         parent::__construct($registry, Review::class);
     }
 
-    // Метод для получения страницы
-    public function getPageByBookId(int $id,int $offset,int $limit): Paginator
+    /**
+     * @return Traversable&Countable
+     */
+    // Метод для получения страницы c комментарием ограниченный страницей комментария и
+    public function getPageByBookId(int $id,int $offset,int $limit)
     {
         $query = $this->_em->createQuery('SELECT r FROM App\Entity\Review r WHERE r.book = :id ORDER BY r.createdAt DESC')
         // Установили первый результат, установили количество отзывов на страницу
