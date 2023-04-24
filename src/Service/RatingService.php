@@ -12,10 +12,17 @@ class RatingService
     }
 
 
-    public function calcReviewRatingForBook(int $id,int $total): float
+    public function calcReviewRatingForBook(int $id): Rating
     {
+
+        // Считаем количество отзывов у этой книги по ID
+        $total = $this->reviewRepository->countByBookId($id);
+
         // Возвращает средний рейтинг книги в случае если есть хотябы один отзыв
-        return $total > 0 ? $this->reviewRepository->getBookTotalRatingSum($id) / $total : 0;
+        $rating = $total > 0 ? $this->reviewRepository->getBookTotalRatingSum($id) / $total : 0;
+
+        // возвращает объект из которого соответственно мы уже будем получать total и rating
+        return new Rating($total, $rating);
     }
 
 }

@@ -37,6 +37,7 @@ class BookDetails
      */
     private array $formats;
 
+
     public function getId(): int
     {
         return $this->id;

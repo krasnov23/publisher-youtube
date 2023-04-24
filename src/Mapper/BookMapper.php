@@ -5,6 +5,7 @@ namespace App\Mapper;
 use App\Entity\Book;
 use App\Models\BookDetails;
 use App\Models\BookListItem;
+use App\Models\RecommendedBook;
 
 class BookMapper
 {
@@ -23,5 +24,6 @@ class BookMapper
         // Суммарный рейтинг всех комментариев деленный на количество отзывов
 
     }
+
 
 }

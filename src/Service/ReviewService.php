@@ -40,10 +40,10 @@ class ReviewService
         // Paginator реализует интерфейс Countable поэтому мы можем применить просто Count и получим всё количество комментариев
         $total = count($paginator);
 
-        $rating = $this->ratingService->calcReviewRatingForBook($id,$total);
+        $rating = $this->ratingService->calcReviewRatingForBook($id);
 
         return (new ReviewPage())
-            ->setRating($rating)
+            ->setRating($rating->getRating())
             ->setTotal($total)->setPage($page)
             ->setAmountPerPage(self::PAGE_LIMIT)
             // ceil - округляет до верхнего значения

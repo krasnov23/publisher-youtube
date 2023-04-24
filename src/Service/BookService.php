@@ -14,16 +14,13 @@ use App\Models\BookListItem;
 use App\Models\BookListResponse;
 use App\Repository\BookCategoryRepository;
 use App\Repository\BookRepository;
-use App\Repository\ReviewRepository;
 use Doctrine\Common\Collections\Collection;
-use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 
 class BookService
 {
-    public function __construct(private BookRepository $bookRepository,
-                                private BookCategoryRepository $bookCategoryRepository,
-                                private ReviewRepository $reviewRepository,
-                                private RatingService $ratingService)
+    public function __construct(private BookRepository           $bookRepository,
+                                private BookCategoryRepository   $bookCategoryRepository,
+                                private RatingService            $ratingService)
     {
     }
 
@@ -47,11 +44,7 @@ class BookService
         // Ищем книгу по Id
         $book = $this->bookRepository->getById($id);
 
-        // Считаем количество отзывов у этой книги по ID
-        $reviews = $this->reviewRepository->countByBookId($id);
-
-        $rating = $this->ratingService->calcReviewRatingForBook($id,$reviews);
-
+        $rating = $this->ratingService->calcReviewRatingForBook($id);
 
         $categories = $book->getCategories()
             ->map(fn (BookCategory $bookCategory) => (new BookCategoryModel(
@@ -60,8 +53,8 @@ class BookService
         $formats = $this->mapFormats($book->getFormats());
 
         return BookMapper::map($book,new BookDetails())
-            ->setRating($rating)
-            ->setReviews($reviews)
+            ->setRating($rating->getRating())
+            ->setReviews($rating->getTotal())
             ->setFormats($formats)
             ->setCategories($categories->toArray());
 

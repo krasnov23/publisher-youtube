@@ -29,9 +29,9 @@ services:
       # он их просто отдает.
       - "-webserver"
       - "-response-body-files-path=/hoverfly_app/responses"
-      - "-import=/hoverfly_app/simulations/recommend.simulation.json"
+      - "-import=/hoverfly_app/simulations/recommend.json"
     # Монтируем всю папку hoverfly
     volumes:
-      - "$PWD/hoverfly:/hoverfly_app:ro"
+      - "./hoverfly:/hoverfly_app:ro"
     ports:
       - 8500:8500
