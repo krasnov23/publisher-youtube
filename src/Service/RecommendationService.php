@@ -7,6 +7,7 @@ use App\Models\RecommendedBook;
 use App\Models\RecommendedBookListResponse;
 use App\Repository\BookRepository;
 use App\Service\Recommendation\Model\RecommendationItem;
+use App\Service\Recommendation\Model\RecommendationResponse;
 use App\Service\Recommendation\RecommendationApiService;
 
 class RecommendationService
@@ -39,12 +40,16 @@ class RecommendationService
     {
         // Получили айдишники рекомендаций
         $ids = array_map(fn (RecommendationItem $item) => $item->getId(),
+            // getRecommendationByBookId возвращает нам модель RecommendationResponse которую мы получаем от внешнего сервиса
             $this->recommendationApiService->getRecommendationByBookId($bookId)->getRecommendations());
 
         // Создаем модель RecomendedBook полученную по айдишникам через статический метод
-        return new RecommendedBookListResponse(array_map([$this,'mapRecommended'],$this->bookRepository->findBooksByIds($ids)));
+        return new RecommendedBookListResponse(array_map([$this,'mapRecommended'],
+            $this->bookRepository->findBooksByIds($ids)));
 
     }
+
+
 
 
 }

@@ -289,7 +289,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
         $mapping = ExceptionMapping::fromCode(Response::HTTP_NOT_FOUND);
 
         // Статус код стандартный потому что, hidden - true в строке выше
-        $responseMessage = Response::$statusTexts[$mapping->getCode()];
+        $responseMessage = 'error message';
 
         // Добавили trace
         $responseBody = json_encode(['error' => $responseMessage, 'trace' => 'something']);
@@ -320,7 +320,7 @@ class ApiExceptionListenerTest extends AbstractTestCase
             ->willReturn($responseBody);
 
         // Перехватывает ошибку
-        $event = $this->createExceptionEvent(new InvalidArgumentException('error message'));
+        $event = $this->createExceptionEvent(new InvalidArgumentException($responseMessage));
 
         // Добавляем тру, для включения дебага, который в верхней строке будет проходить проверку на трейс
         $this->runListener($event,true);

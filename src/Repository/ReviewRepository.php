@@ -43,6 +43,7 @@ class ReviewRepository extends ServiceEntityRepository
         // Считает сущности Review у книги по определенному id
         return $this->count(['book' => $id]);
 
+
     }
 
     // Метод считающий рейтинг книги

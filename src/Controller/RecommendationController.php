@@ -12,6 +12,8 @@ use OpenApi\Annotations as OA;
 
 class RecommendationController extends AbstractController
 {
+
+
     public function __construct(private RecommendationService $recommendationService)
     {
     }
@@ -28,4 +30,6 @@ class RecommendationController extends AbstractController
     {
         return $this->json($this->recommendationService->getRecommendationsByBookId($id));
     }
+
+
 }

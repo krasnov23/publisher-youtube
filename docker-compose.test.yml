@@ -1,27 +1,26 @@
 version: "3.8"
 
 services:
-  database:
-    container_name: postgres
+  database-test:
+    container_name: postgres-test
     image: postgres:15.0-alpine
     environment:
       POSTGRES_USER: boris
       POSTGRES_PASSWORD: 12345
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - 5432:5432
+      - 5433:5432
 
-  hoverfly:
-    container_name: hoverfly
+  hoverfly-test:
+    container_name: hoverfly-test
     image: spectolabs/hoverfly:v1.3.4
     command:
       # у Ховерфлая есть несколько режимов работы, самый простейший это webserver когда в него загружаются симуляции
       # он их просто отдает.
       - "-webserver"
-      - "-response-body-files-path=/hoverfly_app/responses"
-      - "-import=/hoverfly_app/simulations/recommend.json"
     # Монтируем всю папку hoverfly
     volumes:
       - "./hoverfly:/hoverfly_app:ro"
     ports:
-      - 8500:8500
+      - 8501:8500
+      - 8889:8888

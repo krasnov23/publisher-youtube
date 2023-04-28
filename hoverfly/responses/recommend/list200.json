@@ -2,6 +2,8 @@
   "ts" : {{ now "" "unix" }},
   "id" : {{ Request.Path.[3] }},
   "recommendations" : [
-    { "id" :  }
+    {
+      "id" : 1
+    }
   ]
 }

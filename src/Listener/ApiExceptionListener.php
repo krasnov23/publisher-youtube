@@ -55,7 +55,7 @@ class ApiExceptionListener
 
         // Если сообщение из исключения скрыто, то выводим стандартное сообщение, в остальных случаях указанный нами текст сообщения
         // который находится непосредственно в классе исключения
-        $message = $mapping->isHidden() ? Response::$statusTexts[$mapping->getCode()] : $throwable->getMessage();
+        $message = $mapping->isHidden() && !$this->isDebug ? Response::$statusTexts[$mapping->getCode()] : $throwable->getMessage();
 
         // Если Debug true то возвращает трейс ошибки
         $details = $this->isDebug ? new ErrorDebugDetails($throwable->getTraceAsString()): null;

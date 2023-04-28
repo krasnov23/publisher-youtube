@@ -25,4 +25,6 @@ class RatingService
         return new Rating($total, $rating);
     }
 
+
+
 }
