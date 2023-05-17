@@ -15,6 +15,7 @@ parameters:
         App\Exceptions\SubscriberAlreadyExistsException: { code: 409,hidden: false }
         App\Exceptions\RequestBodyConvertException: { code: 400,hidden: false }
         App\Exceptions\BookNotFoundException.php: { code: 404,hidden: false }
+        App\Exceptions\UserAlreadyExistsException: { code: 409,hidden: false }
 
 
 services:
@@ -58,7 +59,9 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, priority: 15 }
 
-
+    App\Listener\JwtCreatedListener:
+        tags:
+            - { name: kernel.event_listener, event: lexic_jwt_authentication.on_jwt_created }
 
 
 

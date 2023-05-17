@@ -18,7 +18,9 @@ services:
       # у Ховерфлая есть несколько режимов работы, самый простейший это webserver когда в него загружаются симуляции
       # он их просто отдает.
       - "-webserver"
+      # указываем откуда брать тела ответов
       - "-response-body-files-path=/hoverfly_app/responses"
+      # 
       - "-import=/hoverfly_app/simulations/recommend.json"
     # Монтируем всю папку hoverfly
     volumes:

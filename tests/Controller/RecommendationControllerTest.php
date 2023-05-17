@@ -34,9 +34,11 @@ class RecommendationControllerTest extends AbstractControllerTest
 
     public function testRecommendationsByBookId(): void
     {
+
         $bookId = $this->createBook();
         $requestedId = 123;
 
+        // Создаем симуляцию образа hoverfly
         $this->hoverfly->simulate(
             $this->hoverfly->buildSimulation()
                 ->service()
