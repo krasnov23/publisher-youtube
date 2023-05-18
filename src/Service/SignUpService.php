@@ -2,18 +2,18 @@
 
 namespace App\Service;
 
-use App\Entity\User;
+use App\Entity\UserApi;
 use App\Exceptions\UserAlreadyExistsException;
 use App\Models\IdResponse;
 use App\Models\SignUpRequest;
-use App\Repository\UserRepository;
+use App\Repository\UserApiRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SignUpService
 {
     public function __construct(private UserPasswordHasherInterface $hasher,
-                                private UserRepository $userRepository,
+                                private UserApiRepository $userRepository,
                                 private EntityManagerInterface $em)
     {
 
@@ -28,7 +28,7 @@ class SignUpService
         }
 
 
-        $user = (new User())
+        $user = (new UserApi())
             ->setFirstName($signUpRequest->getFirstName())
             ->setLastName($signUpRequest->getLastName())
             ->setEmail($signUpRequest->getEmail());

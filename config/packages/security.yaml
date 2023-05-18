@@ -7,9 +7,10 @@ security:
     # Строчка providers по входящему емейлу, т.е входящему идентификатору находит сущность User
     providers:
         users:
-            entity:
-                class: App\Entity\User
-                property: email
+            id: App\Security\JwtUserProvider
+            #entity:
+                #class: App\Entity\UserApi
+                #property: email
         # used to reload user from session & other features (e.g. switch_user)
 
     # Фаерволы это некие правила которые регламентирует правила доступа к чему-либо,
