@@ -8,18 +8,21 @@ use App\Models\IdResponse;
 use App\Models\SignUpRequest;
 use App\Repository\UserApiRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SignUpService
 {
     public function __construct(private UserPasswordHasherInterface $hasher,
                                 private UserApiRepository $userRepository,
-                                private EntityManagerInterface $em)
+                                private EntityManagerInterface $em,
+                                private AuthenticationSuccessHandler $successHandler)
     {
 
     }
 
-    public function signUp(SignUpRequest $signUpRequest): IdResponse
+    public function signUp(SignUpRequest $signUpRequest): Response
     {
         // Проверяем что емейл пользователя который хочет зарегистрироваться отсутствует в базе данных
         if ($this->userRepository->existsByEmail($signUpRequest->getEmail()))
@@ -31,7 +34,8 @@ class SignUpService
         $user = (new UserApi())
             ->setFirstName($signUpRequest->getFirstName())
             ->setLastName($signUpRequest->getLastName())
-            ->setEmail($signUpRequest->getEmail());
+            ->setEmail($signUpRequest->getEmail())
+            ->setRoles(['ROLE_USER']);
 
         // Передаем захэшированный пароль
         $user->setPassword($this->hasher->hashPassword($user, $signUpRequest->getPassword()));
@@ -40,7 +44,7 @@ class SignUpService
 
         $this->em->flush();
 
-        return new IdResponse($user->getId());
+        return $this->successHandler->handleAuthenticationSuccess($user);
     }
 
 

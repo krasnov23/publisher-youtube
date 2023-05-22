@@ -19,12 +19,13 @@ class JwtUserProvider implements PayloadAwareUserProviderInterface
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        return $this->getUser('email',$identifier);
+        return $this->getUser("email",$identifier);
     }
 
     public function loadUserByIdentifierAndPayload(string $identifier,array $payload): UserInterface
     {
-        return $this->getUser('id',$payload['id']);
+        // id должно приходить из токена который можно проверить на jwt.io
+        return $this->getUser("id",$payload["id"]);
     }
 
     // Устаревший метод
@@ -40,7 +41,7 @@ class JwtUserProvider implements PayloadAwareUserProviderInterface
     }
 
     // Поддерживаем ли мы класс который к нам приходит
-    public function supportsClass(string $class)
+    public function supportsClass(string $class): bool
     {
         return $class === UserApi::class || is_subclass_of($class, UserApi::class);
     }
@@ -61,4 +62,5 @@ class JwtUserProvider implements PayloadAwareUserProviderInterface
         return $user;
 
     }
+
 }

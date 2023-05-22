@@ -1,0 +1,89 @@
+<?php
+
+namespace App\Entity;
+
+use DateTimeImmutable;
+use DateTimeInterface;
+use Doctrine\ORM\Mapping as ORM;
+use Gesdinet\JWTRefreshTokenBundle\Entity\RefreshTokenRepository;
+use Gesdinet\JWTRefreshTokenBundle\Model\AbstractRefreshToken;
+use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity(repositoryClass: RefreshTokenRepository::class)]
+class RefreshToken extends AbstractRefreshToken
+{
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    protected $id;
+
+    #[ORM\Column(type: 'string')]
+    protected $refreshToken;
+
+    #[ORM\Column(type: 'string')]
+    protected $username;
+
+    #[ORM\Column(type: 'datetime')]
+    protected $valid;
+
+    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: UserApi::class)]
+    private UserInterface $user;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private DateTimeInterface $createdAt;
+
+    #[ORM\PrePersist]
+    public function setCreatedValue(): self
+    {
+        $this->createdAt = new DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function getCreatedAt(): DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+
+    public function setCreatedAt(DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+
+    public function getUser(): UserInterface
+    {
+        return $this->user;
+    }
+
+
+    public function setUser(UserInterface $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    // Данные метод дергается когда нам необходимо создать токен, соответственно в этом методе ничего о наших полях неизвестно
+    // поэтому мы наследуем его и хотим засетить наши поля
+    public static function createForUserWithTtl(string $refreshToken, UserInterface $user, int $ttl): RefreshTokenInterface
+    {
+        /** @var RefreshToken $entity */
+        $entity = parent::createForUserWithTtl($refreshToken, $user,$ttl);
+
+        $entity->setUser($user);
+
+        return $entity;
+    }
+
+
+
+
+}

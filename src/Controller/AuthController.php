@@ -25,7 +25,11 @@ class AuthController extends AbstractController
      * @OA\Response(
      *     response=200,
      *     description="Signs up a user",
-     *     @Model(type=IdResponse::class))
+     *     @OA\JsonContent(
+     *          @OA\Property(property="token",type="string"),
+     *          @OA\Property(property="refresh_token",type="string"),
+     *      )
+     * )
      * @OA\Response(
      *     response=409,
      *     description="User Already Exists",
@@ -41,7 +45,8 @@ class AuthController extends AbstractController
     #[Route('/api/v1/auth/signUp', name: 'app_sign_up',methods: ['POST'])]
     public function signUp(#[RequestBody] SignUpRequest $signUpRequest): Response
     {
-        return $this->json($this->signUpService->signUp($signUpRequest));
+        // В данном случае возвращаем просто сервис так как возврат сервиса итак несет в себе json объект
+        return $this->signUpService->signUp($signUpRequest);
     }
 
 

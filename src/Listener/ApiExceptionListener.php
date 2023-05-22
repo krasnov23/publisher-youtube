@@ -10,6 +10,8 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -31,6 +33,14 @@ class ApiExceptionListener
     {
         // Получает исключение из ExceptionEvent
         $throwable = $event->getThrowable();
+
+        // Строчка внесенная в инструкции урок 16 пункт 6
+        // Если данное исключение относится к исключениям симфони (которые в свою очередь выбрасываются при ограничении прав
+        // к какому-либо роуту то выбрасываются следующий исключения
+        if ($this->isSecurityException($throwable))
+        {
+            return;
+        }
 
         // Пробуем найти исключение среди наших исключений
         $mapping = $this->resolver->resolve(get_class($throwable));
@@ -70,6 +80,13 @@ class ApiExceptionListener
         // Назначаем этот ответ клиенту.
         $event->setResponse($response);
 
+    }
+
+    // метод который проверяет эксепшон на принадлежность к исключениям которые выбрасываются при попытки получить доступ
+    // к ограниченному роуту.
+    private function isSecurityException(\Throwable $throwable): bool
+    {
+        return $throwable instanceof AuthenticationException || $throwable instanceof AccessDeniedException;
     }
 
 }

@@ -1,0 +1,4 @@
+gesdinet_jwt_refresh_token:
+    refresh_token_class: App\Entity\RefreshToken
+    # опция ниже удаляет из базы текущий токен, а затем вставляет новый
+    single_use: true

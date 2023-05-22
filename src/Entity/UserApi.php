@@ -91,14 +91,17 @@ class UserApi implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getUsername(): string
+    {
+        return $this->email;
+    }
+
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
+
     public function getRoles(): array
     {
         $roles = $this->roles;

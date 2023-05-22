@@ -10,7 +10,8 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class UserController extends AbstractController
 {
-    #[Route('/api/v1/user/me', name: 'app_user')]
+
+    #[Route('/api/v1/user/me', name: 'app_user',methods: ['GET'])]
     public function me(#[CurrentUser] UserInterface $user): Response
     {
         return $this->json($user);
