@@ -16,6 +16,7 @@ parameters:
         App\Exceptions\RequestBodyConvertException: { code: 400,hidden: false }
         App\Exceptions\BookNotFoundException.php: { code: 404,hidden: false }
         App\Exceptions\UserAlreadyExistsException: { code: 409,hidden: false }
+        App\Exceptions\UserNotFoundException.php: { code: 404,hidden: false }
 
 
 services:

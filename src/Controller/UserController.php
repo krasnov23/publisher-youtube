@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class UserController extends AbstractController
 {
-
+    // Ограничения на доступ к данному контроллеру стоят в security.yaml
     #[Route('/api/v1/user/me', name: 'app_user',methods: ['GET'])]
     public function me(#[CurrentUser] UserInterface $user): Response
     {

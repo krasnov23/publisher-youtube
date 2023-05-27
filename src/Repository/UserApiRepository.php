@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\UserApi;
+use App\Exceptions\UserNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -27,6 +28,18 @@ class UserApiRepository extends ServiceEntityRepository implements PasswordUpgra
     public function existsByEmail(string $email): bool
     {
         return null !== $this->findOneBy(['email'=> $email]);
+    }
+
+    public function getUser(int $userId): UserApi
+    {
+        $user = $this->find($userId);
+
+        if (null === $user)
+        {
+            throw new UserNotFoundException();
+        }
+
+        return $user;
     }
 
     public function save(UserApi $entity, bool $flush = false): void
@@ -85,4 +98,5 @@ class UserApiRepository extends ServiceEntityRepository implements PasswordUpgra
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
 }

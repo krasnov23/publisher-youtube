@@ -36,7 +36,7 @@ class ApiExceptionListener
 
         // Строчка внесенная в инструкции урок 16 пункт 6
         // Если данное исключение относится к исключениям симфони (которые в свою очередь выбрасываются при ограничении прав
-        // к какому-либо роуту то выбрасываются следующий исключения
+        // к какому-либо роуту то выбрасываются следующие исключения
         if ($this->isSecurityException($throwable))
         {
             return;
@@ -86,7 +86,7 @@ class ApiExceptionListener
     // к ограниченному роуту.
     private function isSecurityException(\Throwable $throwable): bool
     {
-        return $throwable instanceof AuthenticationException || $throwable instanceof AccessDeniedException;
+        return $throwable instanceof AuthenticationException ;
     }
 
 }
