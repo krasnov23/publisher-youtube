@@ -18,7 +18,9 @@ class AdminController extends AbstractController
     }
 
 
+    // Хэштег тэг штука для группировки роутов внутри слаггера.
     /**
+     * @OA\Tag(name="Admin API")
      * @OA\Response(
      *     response=200,
      *     description="Grants ROLE_AUTHOR to a user",

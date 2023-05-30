@@ -33,7 +33,7 @@ class BookService
         // В данном случае берет массив из книг найденных по категории и каждую из книг отправляем в метод мап
         // где уже метод перемапливает в модель BookListItem
         $mapping = array_map(fn (Book $book) => BookMapper::map($book,new BookListItem()) ,
-            $this->bookRepository->findBooksByCategoryId($categoryId));
+            $this->bookRepository->findPublishedBooksByCategoryId($categoryId));
 
 
         return new BookListResponse($mapping);
@@ -42,7 +42,7 @@ class BookService
     public function getBookById(int $id): BookDetails
     {
         // Ищем книгу по Id
-        $book = $this->bookRepository->getById($id);
+        $book = $this->bookRepository->getPublishedById($id);
 
         $rating = $this->ratingService->calcReviewRatingForBook($id);
 

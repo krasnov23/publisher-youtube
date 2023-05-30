@@ -4,6 +4,15 @@ nelmio_api_doc:
             title: My First API
             description: Api for publishing books and more
             version: 1.0.0
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+        security:
+            - Bearer: []
+
     areas: # to filter documented areas
         path_patterns:
             - ^/api/v1 # Accepts routes under /api except /api/doc

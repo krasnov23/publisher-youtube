@@ -25,7 +25,7 @@ class BookController extends AbstractController
     /**
      * @OA\Response(
      *     response=200,
-     *     description="returns books by category",
+     *     description="returns publisher books by category",
      *
      *     @Model(type=BookListResponse::class))
      * @OA\Response(
@@ -43,12 +43,12 @@ class BookController extends AbstractController
     /**
      * @OA\Response(
      *     response=200,
-     *     description="returns books by category",
+     *     description="returns published books details information",
      *
      *     @Model(type=BookDetails::class))
      * @OA\Response(
      *     response=404,
-     *     description="Book Category not found",
+     *     description="Book not found",
      *     @Model(type=ErrorResponse::class)
      * )
      */
