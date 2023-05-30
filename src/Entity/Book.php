@@ -35,7 +35,7 @@ class Book
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description;
 
-    #[ORM\Column(type: 'date_immutable')]
+    #[ORM\Column(type: 'date_immutable',nullable: true)]
     private ?DateTimeInterface $publicationData;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]

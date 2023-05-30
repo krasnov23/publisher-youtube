@@ -7,8 +7,10 @@ use App\Exceptions\BookAlreadyExistsException;
 use App\Models\Author\BookListItem;
 use App\Models\Author\BookListResponse;
 use App\Models\Author\CreateBookRequest;
+use App\Models\Author\PublishBookRequest;
 use App\Models\IdResponse;
 use App\Repository\BookRepository;
+use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -23,6 +25,18 @@ class AuthorService
         private Security $security
     )
     {
+    }
+
+    // Метод обновляет дату публикации
+    public function publish(int $id,PublishBookRequest $publishBookRequest): void
+    {
+        $this->setPublicationDate($id,$publishBookRequest->getDate());
+    }
+
+    // Метод снятия с публикации
+    public function unpublish(int $id)
+    {
+        $this->setPublicationDate($id,null);
     }
 
     // Получение всех книг текущего пользователя
@@ -67,6 +81,15 @@ class AuthorService
         $book = $this->bookRepository->getUserBookById($id, $user);
 
         $this->em->remove($book);
+        $this->em->flush();
+    }
+
+    private function setPublicationDate(int $book, ?DateTimeInterface $dateTime): void
+    {
+        $book = $this->bookRepository->getUserBookById($book, $this->security->getUser());
+
+        $book->setPublicationData($dateTime);
+
         $this->em->flush();
     }
 
