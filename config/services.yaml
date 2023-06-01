@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    uploadDir: '%kernel.project_dir%/public/upload'
     exceptions:
         # hidden - есть ли какая-то секретная информация в исключении, # loggable свойство определяет стоит ли логировать это исключение
         # loggable - обычно требуется только когда ответ 500, по умолчанию он false поэтому убираем
@@ -18,6 +19,7 @@ parameters:
         App\Exceptions\UserAlreadyExistsException: { code: 409,hidden: false }
         App\Exceptions\UserNotFoundException.php: { code: 404,hidden: false }
         App\Exceptions\BookAlreadyExistsException.php: { code: 409,hidden: false }
+        App\Exceptions\UploadFileInvalidTypeException.php: { code: 404,hidden: false }
 
 
 services:
@@ -64,6 +66,10 @@ services:
     App\Listener\JwtCreatedListener:
         tags:
             - { name: kernel.event_listener, event: lexic_jwt_authentication.on_jwt_created }
+
+
+    App\Service\UploadService:
+        arguments: ['@filesystem','%uploadDir%']
 
 
 

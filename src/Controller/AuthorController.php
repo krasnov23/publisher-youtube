@@ -3,22 +3,55 @@
 namespace App\Controller;
 
 use App\Attribute\RequestBody;
+use App\Attribute\RequestFile;
 use App\Models\Author\CreateBookRequest;
 use App\Models\Author\PublishBookRequest;
+use App\Models\Author\UploadCoverResponse;
 use App\Service\AuthorService;
 use OpenApi\Annotations as OA;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use App\Models\Author\BookListResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\ErrorResponse;
+use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 
 class AuthorController extends AbstractController
 {
     public function __construct(private AuthorService $authorService)
     {
+    }
+
+    // Мы ожидаем что нам будет передан UploadedFile, на нем мы хотим провести валидацию, что эта картинка не ноль,
+    // соответствует указанным форматам и не более одного мегабайта, и если валидатор пропускает это значит мы получаем
+    // файл (UploadedFile)
+    /**
+     * @OA\Tag(name="Author API")
+     * @OA\Response(
+     *     response=200,
+     *     description="Publish a book",
+     *     @Model(type=UploadCoverResponse::class)
+     * )
+     *  @OA\Response(
+     *     response=400,
+     *     description="Validation Failed",
+     *     @Model(type=ErrorResponse::class)
+     * )
+     */
+    #[Route(path: '/api/v1/author/book/{id}/uploadCover',methods: ['POST'])]
+    public function uploadCover(
+        int $id,
+        #[RequestFile(field: 'cover',constraints: [
+            new NotNull(),
+            new Image(maxSize: '1M', mimeTypes: ['image/jpeg','image/png','image/jpg'])
+        ])] UploadedFile $file
+    ): Response
+    {
+        return $this->json($this->authorService->uploadCover($id, $file));
     }
 
     /**

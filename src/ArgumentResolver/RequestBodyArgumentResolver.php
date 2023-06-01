@@ -33,7 +33,7 @@ class RequestBodyArgumentResolver implements ValueResolverInterface
         try {
             // Десерилизируем тело запроса,
             $model = $this->serializer->deserialize($request->getContent(),
-                // $argument->getType() - вернет класс SubscriberRequest
+                // $argument->getType() - вернет класс SubscriberRequest (модель отправки данных)
                 $argument->getType(),
                 JsonEncoder::FORMAT);
         } catch (\Throwable $throwable)
