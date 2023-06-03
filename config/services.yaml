@@ -16,10 +16,13 @@ parameters:
         App\Exceptions\SubscriberAlreadyExistsException: { code: 409,hidden: false }
         App\Exceptions\RequestBodyConvertException: { code: 400,hidden: false }
         App\Exceptions\BookNotFoundException.php: { code: 404,hidden: false }
+        App\Exceptions\CategoryNotFoundException.php: { code: 404,hidden: false }
         App\Exceptions\UserAlreadyExistsException: { code: 409,hidden: false }
         App\Exceptions\UserNotFoundException.php: { code: 404,hidden: false }
         App\Exceptions\BookAlreadyExistsException.php: { code: 409,hidden: false }
         App\Exceptions\UploadFileInvalidTypeException.php: { code: 404,hidden: false }
+        App\Exceptions\BookCategoryNotEmptyException: { code: 400, hidden: false }
+        App\Exceptions\BookCategoryAlreadyExistsException: { code: 409, hidden: false }
 
 
 services:

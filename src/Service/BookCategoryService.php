@@ -3,14 +3,66 @@
 namespace App\Service;
 
 use App\Entity\BookCategory;
+use App\Exceptions\BookCategoryAlreadyExistsException;
+use App\Exceptions\BookCategoryNotEmptyException;
+use App\Models\Author\BookCategoryUpdateRequest;
 use App\Models\BookCategoryModel;
 use App\Models\BookCategoryListResponse;
+use App\Models\IdResponse;
 use App\Repository\BookCategoryRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Id;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class BookCategoryService
 {
-    public function __construct(private BookCategoryRepository $bookCategoryRepository)
+    public function __construct(private BookCategoryRepository $bookCategoryRepository,
+                                private SluggerInterface $slugger)
     {
+    }
+
+    public function deleteCategory(int $id): void
+    {
+        $category = $this->bookCategoryRepository->getById($id);
+
+        $books = $this->bookCategoryRepository->countBooksByCategory($category->getId());
+
+        if ($books > 0)
+        {
+            throw new BookCategoryNotEmptyException($books);
+        }
+
+        $this->bookCategoryRepository->remove($category,true);
+
+    }
+
+    public function createCategory(BookCategoryUpdateRequest $updateRequest): IdResponse
+    {
+        $category = new BookCategory();
+
+        $this->upsertCategory($category, $updateRequest);
+
+        return new IdResponse($category->getId());
+    }
+
+    public function upDateCategory(int $id, BookCategoryUpdateRequest $updateRequest): void
+    {
+        $this->upsertCategory($this->bookCategoryRepository->getById($id),$updateRequest);
+    }
+
+    private function upsertCategory(BookCategory $bookCategory,BookCategoryUpdateRequest $updateRequest): void
+    {
+        $slug = $this->slugger->slug($updateRequest->getTitle());
+
+        if ($this->bookCategoryRepository->existsBySlug($slug))
+        {
+            throw new BookCategoryAlreadyExistsException();
+        }
+
+        $bookCategory->setTitle($updateRequest->getTitle())->setSlug($slug);
+
+        $this->bookCategoryRepository->save($bookCategory,true);
+
     }
 
     public function getCategories(): BookCategoryListResponse
