@@ -11,9 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class BookPublishService
 {
 
-    public function __construct(
-        private EntityManagerInterface $em,
-        private BookRepository $bookRepository)
+    public function __construct(private BookRepository $bookRepository)
     {
     }
 
@@ -47,7 +45,7 @@ class BookPublishService
 
         $book->setPublicationData($dateTime);
 
-        $this->em->flush();
+        $this->bookRepository->save($book,true);
     }
 
 }

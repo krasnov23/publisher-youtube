@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\BookFormat;
+use App\Exceptions\BookFormatNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,18 @@ class BookFormatRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getById(int $id): BookFormat
+    {
+        $format = $this->find($id);
+
+        if (null === $format)
+        {
+            throw new BookFormatNotFoundException();
+        }
+
+        return $format;
     }
 
 //    /**

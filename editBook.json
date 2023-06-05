@@ -1,0 +1,10 @@
+{
+  "isbn" : "dddd",
+  "description" : "test",
+  "authors" : ["first"],
+  "categories" : [ 1,2 ],
+  "formats" : [{
+    "id" : 1 ,
+    "price" : 11.6
+  }]
+}

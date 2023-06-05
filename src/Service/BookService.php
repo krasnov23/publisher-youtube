@@ -43,38 +43,18 @@ class BookService
     {
         // Ищем книгу по Id
         $book = $this->bookRepository->getPublishedById($id);
-
         $rating = $this->ratingService->calcReviewRatingForBook($id);
-
-        $categories = $book->getCategories()
-            ->map(fn (BookCategory $bookCategory) => (new BookCategoryModel(
-                $bookCategory->getId(), $bookCategory->getTitle(), $bookCategory->getSlug())));
-
-        $formats = $this->mapFormats($book->getFormats());
+        $categories = BookMapper::mapCategories($book);
+        $formats = BookMapper::mapFormats($book);
 
         return BookMapper::map($book,new BookDetails())
             ->setRating($rating->getRating())
             ->setReviews($rating->getTotal())
             ->setFormats($formats)
-            ->setCategories($categories->toArray());
+            ->setCategories($categories);
 
     }
 
-    /**
-     * @param Collection<BookToBookFormat> $formats
-     * @return array
-     */
-    private function mapFormats(Collection $formats): array
-    {
-        $a = $formats->map(fn(BookToBookFormat $formatJoin) => (new BookFormatModel())
-            ->setId($formatJoin->getFormat()->getId())
-            ->setTitle($formatJoin->getFormat()->getTitle())
-            ->setDescription($formatJoin->getFormat()->getDescription())
-            ->setComment($formatJoin->getFormat()->getComment())
-            ->setPrice($formatJoin->getPrice())
-            ->setDiscountPercent($formatJoin->getDiscountPercent()))->toArray();
 
-        return $a;
-    }
 
 }

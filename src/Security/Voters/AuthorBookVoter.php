@@ -17,7 +17,9 @@ class AuthorBookVoter extends Voter
 
     }
 
+    // Проверяет что метод контроллера содержит self::IS_AUTHOR
     // Проверяем поддерживает ли воутер входящий объект или нет
+    // Данный вотер срабатывает при следующем атрибуте #[IsGranted(AuthorBookVoter::IS_AUTHOR ,subject: 'id')]
     protected function supports(string $attribute, mixed $subject): bool
     {
         // Проверяем что нам передали права BOOK_PUBLISH

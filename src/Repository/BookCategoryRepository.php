@@ -67,6 +67,14 @@ class BookCategoryRepository extends ServiceEntityRepository
         return $category;
     }
 
+    /**
+     * @return BookCategory[]
+     */
+    public function findBookCategoriesByIds(array $ids): array
+    {
+        return $this->findBy(['id' => $ids]);
+    }
+
     public function existsBySlug(string $slug): bool
     {
         return null !== $this->findOneBy(["slug" => $slug]);
@@ -76,6 +84,7 @@ class BookCategoryRepository extends ServiceEntityRepository
     {
         return $this->_em->createQuery('SELECT COUNT(b.id) FROM App\Entity\Book b WHERE :categoryId MEMBER OF b.categories')
             ->setParameter('categoryId', $categoryId)
+            // выдает количество книг в категории
             ->getSingleScalarResult();
     }
 

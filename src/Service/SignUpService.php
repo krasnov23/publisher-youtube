@@ -16,7 +16,6 @@ class SignUpService
 {
     public function __construct(private UserPasswordHasherInterface $hasher,
                                 private UserApiRepository $userRepository,
-                                private EntityManagerInterface $em,
                                 private AuthenticationSuccessHandler $successHandler)
     {
 
@@ -30,7 +29,6 @@ class SignUpService
             throw new UserAlreadyExistsException();
         }
 
-
         $user = (new UserApi())
             ->setFirstName($signUpRequest->getFirstName())
             ->setLastName($signUpRequest->getLastName())
@@ -40,9 +38,7 @@ class SignUpService
         // Передаем захэшированный пароль
         $user->setPassword($this->hasher->hashPassword($user, $signUpRequest->getPassword()));
 
-        $this->em->persist($user);
-
-        $this->em->flush();
+        $this->userRepository->save($user,true);
 
         return $this->successHandler->handleAuthenticationSuccess($user);
     }

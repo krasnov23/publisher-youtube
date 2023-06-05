@@ -19,6 +19,7 @@ parameters:
         App\Exceptions\CategoryNotFoundException.php: { code: 404,hidden: false }
         App\Exceptions\UserAlreadyExistsException: { code: 409,hidden: false }
         App\Exceptions\UserNotFoundException.php: { code: 404,hidden: false }
+        App\Exceptions\BookFormatNotFoundException.php: { code: 404,hidden: false }
         App\Exceptions\BookAlreadyExistsException.php: { code: 409,hidden: false }
         App\Exceptions\UploadFileInvalidTypeException.php: { code: 404,hidden: false }
         App\Exceptions\BookCategoryNotEmptyException: { code: 400, hidden: false }

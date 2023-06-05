@@ -3,15 +3,23 @@
 namespace App\Service;
 
 use App\Entity\Book;
+use App\Entity\BookToBookFormat;
 use App\Exceptions\BookAlreadyExistsException;
+use App\Mapper\BookMapper;
+use App\Models\Author\BookAuthorDetails;
+use App\Models\Author\BookFormatOptions;
 use App\Models\Author\BookListItem;
 use App\Models\Author\BookListResponse;
 use App\Models\Author\CreateBookRequest;
+use App\Models\Author\UpdateBookRequest;
 use App\Models\Author\UploadCoverResponse;
+use App\Models\BookDetails;
 use App\Models\IdResponse;
+use App\Repository\BookCategoryRepository;
+use App\Repository\BookFormatRepository;
 use App\Repository\BookRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -20,9 +28,10 @@ class AuthorBookService
 {
 
     public function __construct(
-        private EntityManagerInterface $em,
         private BookRepository $bookRepository,
+        private BookCategoryRepository $bookCategoryRepository,
         private SluggerInterface $slugger,
+        private BookFormatRepository $bookFormatRepository,
         private UploadService $uploadService
         //private EventDispatcherInterface $eventDispatcher
     )
@@ -41,7 +50,7 @@ class AuthorBookService
 
         $book->setImage($link);
 
-        $this->em->flush();
+        $this->bookRepository->save($book,true);
 
         // Если у нас уже есть загруженная в папку картинка значит нам необходимо ее удалить, для того чтобы не занимать
         // лишнее место
@@ -61,16 +70,25 @@ class AuthorBookService
         );
     }
 
+    // Получение деталей книги автора
+    public function getBook(int $id): BookDetails
+    {
+        $book = $this->bookRepository->getBookById($id);
+
+        $bookDetails = (new BookAuthorDetails())
+            ->setIsbn($book->getIsbn())
+            ->setDescription($book->getDescription())
+            ->setFormats(BookMapper::mapFormats($book))
+            ->setCategories(BookMapper::mapCategories($book));
+
+        return BookMapper::map($book,$bookDetails);
+    }
+
     // Создание книги
     public function createBook(CreateBookRequest $request, UserInterface $user): IdResponse
     {
         // Генерируем слаг
-        $slug = $this->slugger->slug($request->getTitle());
-
-        if ($this->bookRepository->existsBySlug($slug))
-        {
-            throw new BookAlreadyExistsException();
-        }
+        $slug = $this->slugOrThrow($request->getTitle());
 
         $book = (new Book())
                 ->setMeap(false)
@@ -79,10 +97,55 @@ class AuthorBookService
                 ->setPublicationData(new DateTimeImmutable('2020-10-10'))
                 ->setUser($user);
 
-        $this->em->persist($book);
-        $this->em->flush();
+        $this->bookRepository->save($book,true);
 
         return new IdResponse($book->getId());
+    }
+
+    // Данный метод будет написан так что когда нам будет приходить payload, он будет затирать все поля, если в каком-то
+    // поле придет null или какое-то поле вообще не придет, соответстующее поле в базе будет зануленно.
+    // Принимает id и payload
+    public function updateBook(int $id, UpdateBookRequest $updateBookRequest): void
+    {
+        $book = $this->bookRepository->getBookById($id);
+
+        $title = $updateBookRequest->getTitle();
+
+        // если title из реквеста не пустой устанавливаем его, то есть если в реквесте пустое название
+        // не изменяем название книги.
+        if (!empty($title))
+        {
+            $book->setTitle($title)->setSlug($this->slugOrThrow($title));
+        }
+
+        // Удаляются старые связи до форматов
+        foreach ($book->getFormats() as $format)
+        {
+            $this->bookRepository->removeBookFormatReference($format);
+        }
+
+        $formats = array_map(function (BookFormatOptions $options) use ($book): BookToBookFormat {
+            $format = (new BookToBookFormat())
+                ->setPrice($options->getPrice())
+                ->setDiscountPercent($options->getDiscountPercent())
+                ->setBook($book)
+                ->setFormat($this->bookFormatRepository->getById($options->getId()));
+
+            $this->bookRepository->saveBookFormatReference($format,true);
+
+            return $format;
+        }, $updateBookRequest->getFormats());
+
+
+        $book->setAuthors($updateBookRequest->getAuthors())
+            ->setIsbn($updateBookRequest->getIsbn())
+            ->setDescription($updateBookRequest->getDescription())
+            ->setCategories(new ArrayCollection(
+                $this->bookCategoryRepository->findBookCategoriesByIds($updateBookRequest->getCategories())
+            ))
+            ->setFormats(new ArrayCollection($formats));
+
+        $this->bookRepository->save($book,true);
     }
 
     // Удаление определенной книги.
@@ -90,10 +153,20 @@ class AuthorBookService
     {
         $book = $this->bookRepository->getBookById($id);
 
-        $this->em->remove($book);
-        $this->em->flush();
+        $this->bookRepository->remove($book,true);
     }
 
+    private function slugOrThrow(string $title): string
+    {
+        $slug = $this->slugger->slug($title);
+
+        if ($this->bookRepository->existsBySlug($slug))
+        {
+            throw new BookAlreadyExistsException();
+        }
+
+        return $slug;
+    }
 
     private function map(Book $book): BookListItem
     {

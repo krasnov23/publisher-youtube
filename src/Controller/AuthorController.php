@@ -6,9 +6,11 @@ use App\Attribute\RequestBody;
 use App\Attribute\RequestFile;
 use App\Models\Author\CreateBookRequest;
 use App\Models\Author\PublishBookRequest;
+use App\Models\Author\UpdateBookRequest;
 use App\Models\Author\UploadCoverResponse;
 use App\Security\Voters\AuthorBookVoter;
 use App\Service\AuthorBookService;
+use App\Models\Author\BookAuthorDetails;
 use App\Service\BookPublishService;
 use OpenApi\Annotations as OA;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -153,13 +155,54 @@ class AuthorController extends AbstractController
      *     @Model(type=ErrorResponse::class)
      * )
      */
-    #[Route(path: '/api/v1/author/book/{id}', name:"app_delete_authors_book", methods: ['DELETE'])]
+    #[Route(path: '/api/v1/author/book/{id}/delete', name:"app_delete_authors_book", methods: ['DELETE'])]
     #[IsGranted(AuthorBookVoter::IS_AUTHOR ,subject: 'id')]
     public function deleteBook(int $id): Response
     {
         $this->authorService->deleteBook($id);
 
         return $this->json(null);
+    }
+
+    /**
+     * @OA\Tag(name="Author API")
+     * @OA\Response(
+     *     response=200,
+     *     description="Update a book",
+     * )
+     *  @OA\Response(
+     *     response=404,
+     *     description="Book not found",
+     *     @Model(type=ErrorResponse::class))
+     * @OA\RequestBody(@Model(type=UpdateBookRequest::class))
+     */
+    #[Route(path: '/api/v1/author/book/{id}/update', methods: ['POST'])]
+    #[IsGranted(AuthorBookVoter::IS_AUTHOR ,subject: 'id')]
+    public function upDateBook(int $id, #[RequestBody] UpdateBookRequest $request): Response
+    {
+        $this->authorService->updateBook($id, $request);
+
+        return $this->json(null);
+    }
+
+    /**
+     * @OA\Tag(name="Author API")
+     * @OA\Response(
+     *     response=200,
+     *     description="Delete book",
+     *     @Model(type=BookAuthorDetails::class)
+     * )
+     * @OA\Response(
+     *  response=404,
+     *  description="book not found",
+     *  @Model(type=ErrorResponse::class)
+     * )
+     */
+    #[Route(path: '/api/v1/author/book/{id}', methods: ['GET'])]
+    #[IsGranted(AuthorBookVoter::IS_AUTHOR ,subject: 'id')]
+    public function book(int $id): Response
+    {
+        return $this->json($this->authorService->getBook($id));
     }
 
 

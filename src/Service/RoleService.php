@@ -7,8 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class RoleService
 {
-    public function __construct(private UserApiRepository $userRepository,
-                                private EntityManagerInterface $em)
+    public function __construct(private UserApiRepository $userRepository)
     {
     }
 
@@ -29,7 +28,7 @@ class RoleService
         $user = $this->userRepository->getUser($userId);
         $user->setRoles([$role]);
 
-        $this->em->flush();
+        $this->userRepository->save($user,true);
 
     }
 }

@@ -11,11 +11,10 @@ use Doctrine\ORM\EntityManagerInterface;
 class SubscriberService
 {
 
-    public function __construct(private SubscriberRepository $subscriberRepository, private EntityManagerInterface $entityManager)
+    public function __construct(private SubscriberRepository $subscriberRepository)
     {
 
     }
-
 
     public function subscribe(SubscriberRequest $subscriberRequest)
     {
@@ -30,11 +29,11 @@ class SubscriberService
         $subscriber = new Subscriber();
         $subscriber->setEmail($subscriberRequest->getEmail());
 
-        $this->entityManager->persist($subscriber);
-
-        $this->entityManager->flush();
+        $this->subscriberRepository->save($subscriber,true);
 
     }
+
+
 
 
 
