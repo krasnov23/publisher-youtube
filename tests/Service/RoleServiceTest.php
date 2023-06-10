@@ -13,8 +13,6 @@ class RoleServiceTest extends TestCase
 {
     private UserApiRepository $userRepository;
 
-    private EntityManagerInterface $em;
-
     private UserApi $user;
 
     protected function setUp(): void
@@ -30,28 +28,28 @@ class RoleServiceTest extends TestCase
             ->with(1)
             ->willReturn($this->user);
 
-        $this->em = $this->createMock(EntityManagerInterface::class);
-        $this->em->expects($this->once())
-            ->method('flush');
+        $this->userRepository->expects($this->once())
+            ->method('save')
+            ->with($this->user, true);
 
     }
 
     #[Pure]
     private function createService(): RoleService
     {
-        return new RoleService($this->userRepository,$this->em);
+        return new RoleService($this->userRepository);
     }
 
     public function testGrantAdmin(): void
     {
         $this->createService()->grandAdmin(1);
-        $this->assertEquals(['ROLE_ADMIN','ROLE_USER'],$this->user->getRoles());
+        $this->assertEquals(['ROLE_ADMIN'],$this->user->getRoles());
     }
 
     public function testGrantAuthor(): void
     {
         $this->createService()->grandAuthor(1);
-        $this->assertEquals(['ROLE_AUTHOR','ROLE_USER'],$this->user->getRoles());
+        $this->assertEquals(['ROLE_AUTHOR'],$this->user->getRoles());
     }
 
 }

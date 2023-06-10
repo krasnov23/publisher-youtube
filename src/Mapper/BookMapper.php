@@ -32,20 +32,18 @@ class BookMapper
         ->setSlug($book->getSlug())
         ->setImage($book->getImage())
         ->setAuthors($book->getAuthors())
-        ->setMeap($book->isMeap())
-        ->setPublicationData($publicationDate);
+        ->setPublicationDate($publicationDate);
         // Суммарный рейтинг всех комментариев деленный на количество отзывов
 
     }
 
     public static function mapCategories(Book $book): array
     {
-        $categories = $book->getCategories()
+        return $book->getCategories()
             ->map(fn (BookCategory $bookCategory) => (new BookCategoryModel(
                 $bookCategory->getId(), $bookCategory->getTitle(), $bookCategory->getSlug())))
                 ->toArray();
 
-        return $categories;
     }
 
     /**

@@ -12,7 +12,7 @@ class UploadService
     private const LINK_BOOK_PATTERN = '/upload/book/%d/%s';
 
     // Переменная $uploadDir передается из services.yaml
-    public function __construct(private FileSystem $fs,private string $uploadDir)
+    public function __construct(private FileSystem $fs, private string $uploadDir)
     {
     }
 
@@ -35,7 +35,6 @@ class UploadService
         // Составляем путь по которому мы будем заливать файлы
         // DIRECTORY_SEPARATOR - это разделение по файловой системы папок, которое меняет свое значение взависимости от
         // операционной системы
-
 
         // Перемещаем файл в место постоянного хранения
         $file->move($this->getUploadPathForBook($bookId), $uniqueName);

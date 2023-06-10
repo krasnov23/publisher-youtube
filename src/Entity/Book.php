@@ -38,14 +38,9 @@ class Book
     #[ORM\Column(type: 'date_immutable',nullable: true)]
     private ?DateTimeInterface $publicationData;
 
-    #[ORM\Column(type: 'boolean', options: ['default' => false])]
-    private bool $meap = false;
-
-
     #[ORM\JoinColumn(nullable: false)]
     #[ORM\ManyToOne(targetEntity: UserApi::class)]
     private UserInterface $user;
-
 
     /**
      * @var Collection<BookCategory>
@@ -134,18 +129,6 @@ class Book
     public function setPublicationData(?DateTimeInterface $publicationData): self
     {
         $this->publicationData = $publicationData;
-
-        return $this;
-    }
-
-    public function isMeap(): bool
-    {
-        return $this->meap;
-    }
-
-    public function setMeap(bool $meap): self
-    {
-        $this->meap = $meap;
 
         return $this;
     }

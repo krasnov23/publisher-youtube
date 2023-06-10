@@ -5,6 +5,7 @@ namespace App\Tests\Controller;
 use App\Entity\Book;
 use App\Entity\Review;
 use App\Tests\AbstractControllerTest;
+use App\Tests\Service\MockUtils;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -13,9 +14,15 @@ class ReviewControllerTest extends AbstractControllerTest
 
     public function testReviews(): void
     {
-        $book = $this->createBook();
+        $user = MockUtils::createUser();
+        $this->em->persist($user);
 
-        $this->createReview($book);
+        $book = MockUtils::createBook()
+            ->setUser($user);
+        $this->em->persist($book);
+
+        $review = MockUtils::createReview($book);
+        $this->em->persist($review);
 
         $this->em->flush();
 
@@ -61,32 +68,5 @@ class ReviewControllerTest extends AbstractControllerTest
 
     }
 
-    private function createBook(): Book
-    {
-        $book = (new Book())
-            ->setTitle('Test Book')
-            ->setImage('test.png')
-            ->setMeap(true)
-            ->setIsbn("123123")
-            ->setDescription('test')
-            ->setPublicationData(new DateTimeImmutable())
-            ->setAuthors(['V.Pupkin'])
-            ->setCategories(new ArrayCollection([]))
-            ->setSlug('test-book');
-
-        $this->em->persist($book);
-
-        return $book;
-    }
-
-    private function createReview(Book $book)
-    {
-        $this->em->persist((new Review())
-        ->setAuthor('tester')
-        ->setContent('test content')
-        ->setCreatedAt(new DateTimeImmutable())
-        ->setRating(5)
-        ->setBook($book));
-    }
 
 }

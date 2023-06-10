@@ -7,7 +7,6 @@ use App\Exceptions\UserAlreadyExistsException;
 use App\Models\SignUpRequest;
 use App\Repository\UserApiRepository;
 use App\Service\SignUpService;
-use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,8 +18,6 @@ class SignUpServiceTest extends TestCase
 
     private UserApiRepository $userRepository;
 
-    private EntityManagerInterface $em;
-
     private AuthenticationSuccessHandler $successHandler;
 
     protected function setUp(): void
@@ -29,13 +26,12 @@ class SignUpServiceTest extends TestCase
 
         $this->hasher = $this->createMock(UserPasswordHasher::class);
         $this->userRepository = $this->createMock(UserApiRepository::class);
-        $this->em = $this->createMock(EntityManagerInterface::class);
         $this->successHandler = $this->createMock(AuthenticationSuccessHandler::class);
     }
 
     private function createService(): SignUpService
     {
-        return new SignUpService($this->hasher,$this->userRepository,$this->em,$this->successHandler);
+        return new SignUpService($this->hasher,$this->userRepository,$this->successHandler);
     }
 
 
@@ -77,17 +73,15 @@ class SignUpServiceTest extends TestCase
             ->with($expectedHasherUser,'testtest')
             ->willReturn("hashed_password");
 
-        $this->em->expects($this->once())
-            ->method('persist')
-            ->with($expectedUser);
-
-        $this->em->expects($this->once())
-            ->method('flush');
 
         $this->successHandler->expects($this->once())
             ->method("handleAuthenticationSuccess")
             ->with($expectedUser)
             ->willReturn($response);
+
+        $this->userRepository->expects($this->once())
+            ->method('save')
+            ->with($expectedUser,true);
 
         $signUpRequest = (new SignUpRequest())
             ->setEmail('test@test.com')
@@ -97,7 +91,6 @@ class SignUpServiceTest extends TestCase
             ->setPassword('testtest');
 
         $this->assertEquals($response, $this->createService()->signUp($signUpRequest));
-
 
     }
 

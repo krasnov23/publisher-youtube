@@ -29,9 +29,11 @@ class UpdateBookRequest
     }
 
 
-    public function setTitle(?string $title): void
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
+
+        return $this;
     }
 
     public function getAuthors(): ?array
@@ -39,9 +41,11 @@ class UpdateBookRequest
         return $this->authors;
     }
 
-    public function setAuthors(?array $authors): void
+    public function setAuthors(?array $authors): self
     {
         $this->authors = $authors;
+
+        return $this;
     }
 
     public function getIsbn(): ?string
@@ -49,9 +53,11 @@ class UpdateBookRequest
         return $this->isbn;
     }
 
-    public function setIsbn(?string $isbn): void
+    public function setIsbn(?string $isbn): self
     {
         $this->isbn = $isbn;
+
+        return $this;
     }
 
     public function getDescription(): ?string
@@ -59,9 +65,11 @@ class UpdateBookRequest
         return $this->description;
     }
 
-    public function setDescription(?string $description): void
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
     }
 
     public function getFormats(): ?array
@@ -69,9 +77,11 @@ class UpdateBookRequest
         return $this->formats;
     }
 
-    public function setFormats(?array $formats): void
+    public function setFormats(?array $formats): self
     {
         $this->formats = $formats;
+
+        return $this;
     }
 
     public function getCategories(): ?array
@@ -79,9 +89,11 @@ class UpdateBookRequest
         return $this->categories;
     }
 
-    public function setCategories(?array $categories): void
+    public function setCategories(?array $categories): self
     {
         $this->categories = $categories;
+
+        return $this;
     }
 
 

@@ -23,7 +23,6 @@ class RequestFileArgumentResolver implements ValueResolverInterface
             return [];
         }
 
-
         /** @var RequestFile $attribute */
         $attribute = $argument->getAttributes(RequestFile::class,ArgumentMetadata::IS_INSTANCEOF)[0];
 

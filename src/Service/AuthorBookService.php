@@ -71,7 +71,7 @@ class AuthorBookService
     }
 
     // Получение деталей книги автора
-    public function getBook(int $id): BookDetails
+    public function getBook(int $id): BookAuthorDetails
     {
         $book = $this->bookRepository->getBookById($id);
 
@@ -91,7 +91,6 @@ class AuthorBookService
         $slug = $this->slugOrThrow($request->getTitle());
 
         $book = (new Book())
-                ->setMeap(false)
                 ->setTitle($request->getTitle())
                 ->setSlug($slug)
                 ->setPublicationData(new DateTimeImmutable('2020-10-10'))

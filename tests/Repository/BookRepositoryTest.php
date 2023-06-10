@@ -6,6 +6,7 @@ use App\Entity\Book;
 use App\Entity\BookCategory;
 use App\Repository\BookRepository;
 use App\Tests\AbstractRepositoryTest;
+use App\Tests\Service\MockUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 
 // Проверяем что конкретный метод репозитория работает
@@ -22,20 +23,23 @@ class BookRepositoryTest extends AbstractRepositoryTest
 
     public function testFindBookByCategoryId()
     {
+        $user = MockUtils::createUser();
+        $this->em->persist($user);
 
-        $devicesCategory = (new BookCategory())->setTitle('Devices')->setSlug('devices');
-
+        $devicesCategory = MockUtils::createBookCategory();
         $this->em->persist($devicesCategory);
 
         for ($i = 0; $i < 5; $i++) {
-            $book = $this->createBook('device-' . $i, $devicesCategory);
+            $book = MockUtils::createBook()->setUser($user)
+                ->setTitle("device-$i")
+                ->setCategories(new ArrayCollection([$devicesCategory]));
             $this->em->persist($book);
         }
 
         $this->em->flush();
 
         // 5 совпадает с количеством найденных по категории книг
-        $this->assertCount(5, $this->bookRepository->findBooksByCategoryId($devicesCategory->getId()));
+        $this->assertCount(5, $this->bookRepository->findPublishedBooksByCategoryId($devicesCategory->getId()));
     }
 
     public function createBook(string $title,BookCategory $category): Book
@@ -43,7 +47,6 @@ class BookRepositoryTest extends AbstractRepositoryTest
         return (new Book())
             ->setPublicationData(new \DateTimeImmutable())
             ->setAuthors(['author'])
-            ->setMeap(false)
             ->setSlug($title)
             ->setDescription('test description')
             ->setIsbn('123123')

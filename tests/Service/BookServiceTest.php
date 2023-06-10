@@ -59,12 +59,12 @@ class BookServiceTest extends AbstractTestCase
     public function testGetBookById(): void
     {
         $this->bookRepository->expects($this->once())
-            ->method('getPublishedById')->with(123)
+            ->method('getPublishedById')->with(1)
             ->willReturn($this->createBookEntity());
 
         $this->ratingService->expects($this->once())
             ->method('calcReviewRatingForBook')
-            ->with(123)
+            ->with(1)
             ->willReturn(new Rating(10,5.5));
 
         $format = (new BookFormatModel())
@@ -76,22 +76,21 @@ class BookServiceTest extends AbstractTestCase
             ->setDiscountPercent(5);
 
         $expected = (new BookDetails())
-            ->setId(123)
+            ->setId(1)
             ->setRating(5.5)
             ->setReviews(10)
             ->setSlug('test-book')
             ->setTitle('Test Book')
-            ->setImage('tester.jpg')
+            ->setImage('http://localhost.png')
             ->setAuthors(['Tester'])
-            ->setMeap(false)
             ->setCategories([
-                new BookCategoryModel(1,'Category','category')
+                new BookCategoryModel(1,'Devices','devices')
             ])
             ->setPublicationData(1602288000)
             ->setFormats([$format]);
 
         $this->assertEquals($expected,(new BookService($this->bookRepository, $this->bookCategoryRepository,
-            $this->ratingService))->getBookById(123));
+            $this->ratingService))->getBookById(1));
 
 
     }
@@ -128,35 +127,20 @@ class BookServiceTest extends AbstractTestCase
 
     private function createBookEntity(): Book
     {
-        $category = (new BookCategory())->setTitle('Category')->setSlug('category');
-
+        $category = MockUtils::createBookCategory();
         $this->setEntityId($category,1);
 
-        $formats = (new BookFormat())->setTitle('format')->setDescription('description format')
-            ->setComment(null);
-
+        $formats = MockUtils::createBookFormat();
         $this->setEntityId($formats, 1);
 
-        $join = (new BookToBookFormat())->setPrice(123.55)
-            ->setFormat($formats)
-            ->setDiscountPercent(5);
+        $book = MockUtils::createBook()
+            ->setCategories(new ArrayCollection([$category]));
+        $this->setEntityId($book, 1);
 
+        $join = MockUtils::createBookFormatLink($book,$formats);
         $this->setEntityId($join,1);
 
-        $book = (new Book())
-            ->setTitle('Test Book')
-            ->setSlug('test-book')
-            ->setMeap(false)
-            ->setIsbn('123123')
-            ->setDescription('test description')
-            ->setAuthors(['Tester'])
-            ->setImage('tester.jpg')
-            // В данном случае пустой, такой же как и сущность
-            ->setCategories(new ArrayCollection([$category]))
-            ->setFormats(new ArrayCollection([$join]))
-            ->setPublicationData(new \DateTimeImmutable('2020-10-10'));
-
-        $this->setEntityId($book, 123);
+        $book->setFormats(new ArrayCollection([$join]));
 
         return $book;
     }
@@ -165,12 +149,12 @@ class BookServiceTest extends AbstractTestCase
     {
         // BookListItem не имеет сеткатегорис так как это уже переписанная сущность подобранная под определенную категорию
         return (new BookListItem())
-            ->setId(123)
+            ->setId(1)
             ->setTitle('Test Book')
             ->setSlug('test-book')
-            ->setMeap(false)
             ->setAuthors(['Tester'])
-            ->setImage('tester.jpg')
-            ->setPublicationData(1602288000);
+            ->setImage('http://localhost.png')
+            ->setPublicationData(1602288000
+            );
     }
 }

@@ -4,6 +4,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\Book;
 use App\Tests\AbstractControllerTest;
+use App\Tests\Service\MockUtils;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Hoverfly\Client as HoverflyClient;
@@ -34,8 +35,15 @@ class RecommendationControllerTest extends AbstractControllerTest
 
     public function testRecommendationsByBookId(): void
     {
+        $user = MockUtils::createUser();
+        $this->em->persist($user);
 
-        $bookId = $this->createBook();
+        $book = MockUtils::createBook()
+            ->setUser($user);
+        $this->em->persist($book);
+
+        $this->em->flush();
+
         $requestedId = 123;
 
         // Создаем симуляцию образа hoverfly
@@ -48,7 +56,7 @@ class RecommendationControllerTest extends AbstractControllerTest
                 ->willReturn(Response::json([
                     'ts' => 12345,
                     'id' => $requestedId,
-                    'recommendations' => [['id' => $bookId]]
+                    'recommendations' => [['id' => $book->getId()]]
                 ]))
         );
 
@@ -88,7 +96,6 @@ class RecommendationControllerTest extends AbstractControllerTest
         $book = (new Book())
             ->setTitle('Test Book')
             ->setImage('test.png')
-            ->setMeap(true)
             ->setIsbn("123123")
             ->setDescription('test')
             ->setPublicationData(new DateTimeImmutable())

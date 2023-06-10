@@ -15,8 +15,6 @@ class SubscriberServiceTest extends TestCase
 
     private SubscriberRepository $repository;
 
-    private EntityManagerInterface $em;
-
     private const EMAIL = 'test@test.com';
 
     protected function setUp(): void
@@ -24,8 +22,6 @@ class SubscriberServiceTest extends TestCase
         parent::setUp();
 
         $this->repository = $this->createMock(SubscriberRepository::class);
-
-        $this->em = $this->createMock(EntityManagerInterface::class);
     }
 
     // Тест subscribe при отсутствие емейла в базе его сохранит
@@ -44,8 +40,9 @@ class SubscriberServiceTest extends TestCase
         $request = new SubscriberRequest();
         $request->setEmail(self::EMAIL);
 
+
         // Отправляем все эти объекты в наш сервис
-        (new SubscriberService($this->repository, $this->em))->subscribe($request);
+        (new SubscriberService($this->repository))->subscribe($request);
 
     }
 
@@ -61,19 +58,17 @@ class SubscriberServiceTest extends TestCase
         $expectedSubscriber = new Subscriber();
         $expectedSubscriber->setEmail(self::EMAIL);
 
-        $this->em->expects($this->once())
-            ->method('persist')
-            ->with($expectedSubscriber);
-
-        $this->em->expects($this->once())
-            ->method('flush');
-
         // Создаем объект Request в который задаем email
         $request = new SubscriberRequest();
         $request->setEmail(self::EMAIL);
 
+
+        $this->repository->expects($this->once())
+            ->method('save')
+            ->with($expectedSubscriber,true);
+
         // Отправляем все эти объекты в наш сервис
-        (new SubscriberService($this->repository, $this->em))->subscribe($request);
+        (new SubscriberService($this->repository))->subscribe($request);
 
     }
 

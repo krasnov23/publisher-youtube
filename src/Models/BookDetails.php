@@ -18,8 +18,6 @@ class BookDetails
      */
     private array $authors;
 
-    private bool $meap;
-
     private int $publicationData;
 
     private float $rating;
@@ -98,17 +96,6 @@ class BookDetails
         return $this;
     }
 
-    public function isMeap(): bool
-    {
-        return $this->meap;
-    }
-
-    public function setMeap(bool $meap): self
-    {
-        $this->meap = $meap;
-
-        return $this;
-    }
 
     public function getPublicationData(): int
     {

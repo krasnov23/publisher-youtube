@@ -37,9 +37,10 @@ class BookPublishService
     public function unpublish(int $id)
     {
         $this->setPublicationDate($id,null);
+
     }
 
-    private function setPublicationDate(int $id, DateTimeInterface $dateTime): void
+    private function setPublicationDate(int $id, ?DateTimeInterface $dateTime): void
     {
         $book = $this->bookRepository->getBookById($id);
 

@@ -2,16 +2,15 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\BookCategory;
 use App\Tests\AbstractControllerTest;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\Service\MockUtils;
 
 class BookCategoryControllerTest extends AbstractControllerTest
 {
     public function testIndex()
     {
 
-        $this->em->persist((new BookCategory())->setTitle('Devices')->setSlug('devices'));
+        $this->em->persist(MockUtils::createBookCategory());
 
         $this->em->flush();
 
