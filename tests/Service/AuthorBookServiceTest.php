@@ -323,7 +323,7 @@ class AuthorBookServiceTest extends AbstractTestCase
         $this->createService()->updateBook(1,$payload);
 
     }
-    
+
 
     private function createService(): AuthorBookService
     {

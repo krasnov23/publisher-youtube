@@ -26,23 +26,8 @@ class SubscriberRepository extends ServiceEntityRepository
         return null !== $this->findOneBy(['email'=> $email]);
     }
 
-    public function save(Subscriber $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
+    use RepositoryModifyTrait;
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(Subscriber $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
 
 //    /**
 //     * @return Subscriber[] Returns an array of Subscriber objects

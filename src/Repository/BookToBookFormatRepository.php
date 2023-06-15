@@ -21,23 +21,7 @@ class BookToBookFormatRepository extends ServiceEntityRepository
         parent::__construct($registry, BookToBookFormat::class);
     }
 
-    public function save(BookToBookFormat $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(BookToBookFormat $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
+    use RepositoryModifyTrait;
 
 //    /**
 //     * @return BookToBookFormat[] Returns an array of BookToBookFormat objects

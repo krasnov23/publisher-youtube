@@ -22,23 +22,7 @@ class BookFormatRepository extends ServiceEntityRepository
         parent::__construct($registry, BookFormat::class);
     }
 
-    public function save(BookFormat $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(BookFormat $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
+    use RepositoryModifyTrait;
 
     public function getById(int $id): BookFormat
     {

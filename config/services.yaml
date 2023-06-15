@@ -24,6 +24,8 @@ parameters:
         App\Exceptions\UploadFileInvalidTypeException.php: { code: 404,hidden: false }
         App\Exceptions\BookCategoryNotEmptyException: { code: 400, hidden: false }
         App\Exceptions\BookCategoryAlreadyExistsException: { code: 409, hidden: false }
+        App\Exceptions\ChapterNotFoundException: { code: 404, hidden: false }
+
 
 
 services:

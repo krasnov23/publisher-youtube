@@ -42,23 +42,7 @@ class UserApiRepository extends ServiceEntityRepository implements PasswordUpgra
         return $user;
     }
 
-    public function save(UserApi $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(UserApi $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
+    use RepositoryModifyTrait;
 
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
